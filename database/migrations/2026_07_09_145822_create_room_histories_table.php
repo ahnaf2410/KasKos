@@ -1,30 +1,51 @@
-public function up(): void
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
 {
-    Schema::create('room_histories', function (Blueprint $table) {
-        $table->id();
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('room_histories', function (Blueprint $table) {
+            $table->id();
 
-        $table->integer('room_id');
-        $table->integer('user_id');
+            $table->integer('room_id');
+            $table->integer('user_id');
 
-        $table->date('start_date');
-        $table->date('end_date')->nullable();
+            $table->date('start_date');
+            $table->date('end_date')->nullable();
 
-        $table->enum('status', [
-            'active',
-            'moved',
-            'left'
-        ])->default('active');
+            $table->enum('status', [
+                'active',
+                'moved',
+                'left'
+            ])->default('active');
 
-        $table->timestamps();
+            $table->timestamps();
 
-        $table->foreign('room_id')
-            ->references('id')
-            ->on('rooms')
-            ->cascadeOnDelete();
+            $table->foreign('room_id')
+                ->references('id')
+                ->on('rooms')
+                ->cascadeOnDelete();
 
-        $table->foreign('user_id')
-            ->references('id')
-            ->on('users')
-            ->cascadeOnDelete();
-    });
-}
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->cascadeOnDelete();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('room_histories');
+    }
+};
+//benerin migration ini
