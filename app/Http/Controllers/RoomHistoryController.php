@@ -8,58 +8,36 @@ use Illuminate\Http\Request;
 class RoomHistoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Tampilkan riwayat perpindahan kamar (read-only).
+     * Admin: lihat semua riwayat.
+     * Penghuni: lihat riwayat kamar milik sendiri saja.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        $search = $request->query('search');
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        $query = RoomHistory::with(['user', 'kamar'])
+            ->latest('tanggal');
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        // Jika bukan admin, batasi hanya riwayat milik user login
+        if ($request->user() && ! $request->user()->hasRole('Admin')) {
+            $query->where('user_id', $request->user()->id);
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(RoomHistory $roomHistory)
-    {
-        //
-    }
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('kamar', function ($q2) use ($search) {
+                    $q2->where('nomor_kamar', 'like', "%{$search}%");
+                })
+                ->orWhere('status', 'like', "%{$search}%");
+            });
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(RoomHistory $roomHistory)
-    {
-        //
-    }
+        $histories = $query->paginate(10)->withQueryString();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, RoomHistory $roomHistory)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(RoomHistory $roomHistory)
-    {
-        //
+        return view('rooms-history.index', compact('histories', 'search'));
     }
 }
