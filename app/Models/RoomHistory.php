@@ -9,33 +9,36 @@ class RoomHistory extends Model
 {
     use HasFactory;
 
+    // Pastikan nama table di sini sama dengan nama tabel yang ada di screenshot-mu
+    // Contoh jika nama tabelnya di database adalah 'room_histories':
     protected $table = 'room_histories';
 
     protected $fillable = [
+        'room_id',
         'user_id',
-        'kamar_id',
+        'start_date',
+        'end_date',
         'status',
-        'tanggal',
-        'keterangan',
     ];
 
     protected $casts = [
-        'tanggal' => 'date',
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
 
     /**
-     * Penghuni terkait riwayat ini.
+     * Relasi ke data User / Penghuni
      */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
-     * Kamar terkait riwayat ini.
+     * Relasi ke data Kamar (Room)
      */
-    public function kamar()
+    public function room()
     {
-        return $this->belongsTo(Room::class);
+        return $this->belongsTo(Room::class, 'room_id');
     }
 }
