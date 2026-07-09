@@ -2,25 +2,40 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RoomHistory extends Model
 {
+    use HasFactory;
+
+    protected $table = 'room_histories';
+
     protected $fillable = [
-        'room_id',
         'user_id',
-        'start_date',
-        'end_date',
+        'kamar_id',
         'status',
+        'tanggal',
+        'keterangan',
     ];
 
-    public function room()
-    {
-        return $this->belongsTo(Room::class);
-    }
+    protected $casts = [
+        'tanggal' => 'date',
+    ];
 
+    /**
+     * Penghuni terkait riwayat ini.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Kamar terkait riwayat ini.
+     */
+    public function kamar()
+    {
+        return $this->belongsTo(Room::class);
     }
 }
