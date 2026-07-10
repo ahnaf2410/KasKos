@@ -12,10 +12,11 @@ class DenahController extends Controller
      */
     public function index()
     {
-        $kamars = Room::orderBy('lantai')
-            ->orderBy('nomor_kamar')
+        // lantai diganti floor, nomor_kamar diganti room_number
+        $kamars = Room::orderBy('floor')
+            ->orderBy('room_number')
             ->get()
-            ->groupBy('lantai');
+            ->groupBy('floor');
 
         return view('denah.index', compact('kamars'));
     }

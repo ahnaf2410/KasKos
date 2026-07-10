@@ -7,20 +7,16 @@ use Illuminate\Http\Request;
 
 class RoomHistoryController extends Controller
 {
-    /**
-     * Tampilkan riwayat perpindahan kamar (read-only).
-     * Admin: lihat semua riwayat.
-     * Penghuni: lihat riwayat kamar milik sendiri saja.
-     */
     public function index(Request $request)
     {
         $search = $request->query('search');
 
-        $query = RoomHistory::with(['user', 'kamar'])
-            ->latest('tanggal');
+        // Memuat relasi 'user' dan 'room' sesuai model kamu
+        $query = RoomHistory::with(['user', 'room'])
+            ->latest('start_date');
 
-        // Jika bukan admin, batasi hanya riwayat milik user login
-        if ($request->user() && ! $request->user()->hasRole('Admin')) {
+        // Cek role user login
+        if ($request->user() && !$request->user()->hasRole('Admin')) {
             $query->where('user_id', $request->user()->id);
         }
 
@@ -29,8 +25,9 @@ class RoomHistoryController extends Controller
                 $q->whereHas('user', function ($q2) use ($search) {
                     $q2->where('name', 'like', "%{$search}%");
                 })
-                ->orWhereHas('kamar', function ($q2) use ($search) {
-                    $q2->where('nomor_kamar', 'like', "%{$search}%");
+                ->orWhereHas('room', function ($q2) use ($search) {
+                    // Mencari berdasarkan room_number di tabel rooms
+                    $q2->where('room_number', 'like', "%{$search}%");
                 })
                 ->orWhere('status', 'like', "%{$search}%");
             });
