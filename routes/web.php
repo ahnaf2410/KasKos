@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\PaymentController; //payment-melani-coba
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,6 +25,8 @@ Route::middleware(['auth', 'role:Admin'])
     ->group(function () {
 
         Route::resource('rooms', RoomController::class);
+        Route::resource('payments', PaymentController::class); //payment-melani-coba
+
 
     });
 
