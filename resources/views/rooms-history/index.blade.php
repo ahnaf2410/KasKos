@@ -78,16 +78,13 @@
                                             </span>
                                         </td>
                                         <td class="px-4 py-3 text-slate-600 text-xs">
-                                            @if($history->start_date)
-                                                <span class="font-medium text-slate-700">{{ $history->start_date->format('d M Y') }}</span>
-                                                @if($history->end_date)
-                                                    <span class="text-slate-400"> s/d </span>
-                                                    <span class="font-medium text-slate-700">{{ $history->end_date->format('d M Y') }}</span>
-                                                @else
-                                                    <span class="text-emerald-500 font-medium"> (Seterusnya) </span>
-                                                @endif
+                                            <span class="font-medium text-slate-700">
+                                                {{ $history->created_at->format('d M Y H:i') }}
+                                            </span>
+                                            @if(strtolower($history->status) == 'active')
+                                                <span class="text-emerald-500 font-medium"> (Mulai Menempati) </span>
                                             @else
-                                                -
+                                                <span class="text-red-500 font-medium"> (Keluar/Pindah) </span>
                                             @endif
                                         </td>
                                     </tr>
