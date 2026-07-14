@@ -3,46 +3,99 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Room;
+use App\Models\User;
 use App\Models\Payment;
-use App\Models\PersonalPayment;
+use App\Models\Bill;
+use App\Models\RoomHistory;
+use Carbon\Carbon;
+
 
 class DashboardController extends Controller
 {
     public function admin()
     {
-        $totalUsers = User::count();
+        // Total uang yang sudah diverifikasi
+        $totalKasKos = Payment::where('status', 'verified')
+            ->sum('split_amount');
 
+
+        // Statistik kamar
         $totalRooms = Room::count();
 
-        $occupiedRooms = Room::whereNotNull('tenant_id')->count();
+        $kamarTerisi = Room::whereNotNull('tenant_id')
+            ->count();
 
-        $emptyRooms = Room::whereNull('tenant_id')->count();
+        $kamarKosong = Room::whereNull('tenant_id')
+            ->count();
 
-        $pendingPayments = Payment::where('status', 'pending')->count();
 
-        $verifiedPayments = Payment::where('status', 'verified')->count();
+        // Persentase okupansi
+        $occupancyPercentage = $totalRooms > 0
+            ? round(($kamarTerisi / $totalRooms) * 100)
+            : 0;
 
-        $rejectedPayments = Payment::where('status', 'rejected')->count();
+        // Jumlah pembayaran menunggu verifikasi
+        $verifikasi = Payment::where('status', 'pending')
+            ->count();
 
-        $personalPayments = PersonalPayment::count();
+        // Sama dengan verifikasi pending
+        $pendingPayments = $verifikasi;
 
-        $recentPayments = Payment::with('user')
+        // Pembayaran terbaru
+        $recentPayments = Payment::with(['user', 'bill'])
             ->latest()
             ->take(5)
             ->get();
 
+        // Penghuni baru bulan ini
+        $newTenants = User::whereMonth(
+            'created_at',
+            Carbon::now()->month
+        )->count();
+
+        // Riwayat kamar
+        $roomsHistory = RoomHistory::count();
+
+        // Tagihan belum lunas
+        // $unpaidBills = Bill::where('status', 'unpaid')
+        //     ->latest()
+        //     ->take(5)
+        //     ->get();
+        $unpaidBills = collect([
+            [
+                'title' => 'Tagihan Air',
+                'amount' => 50000
+            ],
+            [
+                'title' => 'Tagihan Listrik',
+                'amount' => 120000
+            ],
+            [
+                'title' => 'Internet',
+                'amount' => 100000
+            ],
+        ]);
+
+
         return view('dashboard.admin', compact(
-            'totalUsers',
+            'totalKasKos',
+
+            'kamarTerisi',
+            'kamarKosong',
+            'occupancyPercentage',
             'totalRooms',
-            'occupiedRooms',
-            'emptyRooms',
+
+            'verifikasi',
             'pendingPayments',
-            'verifiedPayments',
-            'rejectedPayments',
-            'personalPayments',
-            'recentPayments'
+
+            'recentPayments',
+
+            'newTenants',
+
+            'roomsHistory',
+
+            'unpaidBills'
         ));
     }
 }

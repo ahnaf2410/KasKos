@@ -11,11 +11,32 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
         @php
-        $cards=[
-        ['Total Penghuni','18','👥','bg-blue-600'],
-        ['Total Kamar','25','🏠','bg-green-600'],
-        ['Tagihan Aktif','34','💳','bg-yellow-500'],
-        ['Pendapatan','Rp15.5 Jt','💰','bg-red-600']];
+        $cards = [
+            [
+                'Total KasKos',
+                'Rp ' . number_format($totalKasKos, 0, ',', '.'),
+                '💰',
+                'bg-emerald-600'
+            ],
+            [
+                'Kamar Terisi',
+                $kamarTerisi,
+                '🏠',
+                'bg-blue-600'
+            ],
+            [
+                'Kamar Kosong',
+                $kamarKosong,
+                '🚪',
+                'bg-orange-500'
+            ],
+            [
+                'Verifikasi',
+                $verifikasi,
+                '✔️',
+                'bg-red-600'
+            ],
+        ];
         @endphp
 
         @foreach($cards as $c)
@@ -34,6 +55,10 @@
     </div>
 
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div class="xl:col-span-2 bg-white rounded-2xl shadow p-6">
+            <div class="flex justify-between mb-4">
+                <h2 class="font-bold text-xl">Aktivitas Pembayaran</h2>
+            </div>
 
     <!-- Aktivitas Pembayaran -->
     <div class="xl:col-span-2 bg-white rounded-2xl shadow p-6">
@@ -55,87 +80,77 @@
                 </thead>
 
                 <tbody>
-
                 @forelse($recentPayments as $payment)
+                <tr class="border-b">
+                    <td class="p-3">{{ $payment->user->name }}</td>
 
-                    <tr class="border-b hover:bg-gray-50">
+                    <td class="p-3">
+                        {{ optional($payment->bill)->title ?? '-' }}
+                    </td>
 
-                        <td class="p-3">
-                            {{ $payment->user->name }}
-                        </td>
+                    <td class="p-3">
+                        Rp {{ number_format($payment->split_amount,0,',','.') }}
+                    </td>
 
-                        <td class="p-3">
-                            {{ optional($payment->bill)->title ?? '-' }}
-                        </td>
-
-                        <td class="p-3">
-                            Rp {{ number_format($payment->split_amount,0,',','.') }}
-                        </td>
-
-                        <td class="p-3">
-                            @if($payment->status == 'verified')
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                                    Verified
-                                </span>
-                            @elseif($payment->status == 'pending')
-                                <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-                                    Pending
-                                </span>
-                            @else
-                                <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
-                                    Rejected
-                                </span>
-                            @endif
-                        </td>
-
-                    </tr>
+                    <td class="p-3">
+                        @if($payment->status == 'verified')
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                                Verified
+                            </span>
+                        @elseif($payment->status == 'pending')
+                            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+                                Pending
+                            </span>
+                        @else
+                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full">
+                                Rejected
+                            </span>
+                        @endif
+                    </td>
+                </tr>
 
                 @empty
 
-                    @for($i=1;$i<=6;$i++)
-                    <tr class="border-b">
-                        <td class="p-3">Penghuni {{ $i }}</td>
-                        <td class="p-3">Tagihan Bulanan</td>
-                        <td class="p-3">Rp450.000</td>
-                        <td class="p-3">
-                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                                Lunas
-                            </span>
-                        </td>
-                    </tr>
-                    @endfor
+                <tr>
+                <td colspan="4" class="text-center py-8 text-gray-500">
+                Belum ada data pembayaran
+                </td>
+                </tr>
 
                 @endforelse
-
                 </tbody>
 
             </table>
         </div>
 
-    </div>
-
-    <!-- Sidebar kanan -->
-    <div class="space-y-6">
-
-        <!-- Tagihan -->
-        <div class="bg-white rounded-2xl shadow p-5">
-            <h3 class="font-bold mb-3">Tagihan Belum Lunas</h3>
-
-            <div class="space-y-3">
+        <div class="space-y-6">
+            <div class="bg-white rounded-2xl shadow p-5">
+                <h3 class="font-bold mb-3">Tagihan Belum Lunas</h3>
+                <div class="space-y-3">
 
                 @forelse($unpaidBills as $bill)
 
                 <div class="flex justify-between">
-                    <span>{{ $bill['title'] }}</span>
-                    <span>Rp {{ number_format($bill['amount'],0,',','.') }}</span>
+                    <span>
+                        {{ $bill['title'] }}
+                    </span>
+
+                    <span>
+                        Rp {{ number_format($bill['amount'],0,',','.') }}
+                    </span>
                 </div>
 
                 @empty
 
-                <p class="text-gray-500">Tidak ada tagihan</p>
+                <p class="text-gray-500">
+                    Tidak ada tagihan
+                </p>
 
                 @endforelse
 
+                </div>
+
+                    </div>
             </div>
         </div>
 
@@ -154,21 +169,19 @@
             </div>
         </div>
 
-        <!-- Okupansi -->
-        <div class="bg-white rounded-2xl shadow p-5">
-            <h3 class="font-bold mb-4">Okupansi Kamar</h3>
-
-            <div class="w-full bg-gray-200 rounded-full h-3">
-                <div
-                    class="bg-red-600 h-3 rounded-full"
-                    style="width: {{ $occupancyPercentage }}%">
+            <div class="bg-white rounded-2xl shadow p-5">
+                <h3 class="font-bold mb-4">Okupansi Kamar</h3>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div 
+                        class="bg-red-600 h-3 rounded-full"
+                        style="width: {{ $occupancyPercentage }}%">
+                        </div>
                 </div>
-            </div>
-
-            <p class="mt-2 text-sm text-gray-600">
-                {{ $kamarTerisi }} dari {{ $totalRooms }}
-                kamar terisi ({{ $occupancyPercentage }}%)
-            </p>
+                <p class="mt-2 text-sm text-gray-600">
+                    {{ $kamarTerisi }} dari {{ $totalRooms }}
+                    kamar terisi ({{ $occupancyPercentage }}%)
+                </p>
+        </div>
         </div>
 
     </div>
@@ -178,17 +191,23 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
         <div class="bg-white rounded-2xl shadow p-5">
             <h3 class="font-bold">Penghuni Baru</h3>
-            <p class="text-4xl font-bold mt-3">4</p>
+            <p class="text-4xl font-bold mt-3">
+            {{ $newTenants }}
+            </p>
         </div>
 
         <div class="bg-white rounded-2xl shadow p-5">
             <h3 class="font-bold">Pembayaran Pending</h3>
-            <p class="text-4xl font-bold mt-3">6</p>
+            <p class="text-4xl font-bold mt-3">
+            {{ $pendingPayments }}
+            </p>
         </div>
 
         <div class="bg-white rounded-2xl shadow p-5">
             <h3 class="font-bold">Rooms History</h3>
-            <p class="text-4xl font-bold mt-3">12</p>
+            <p class="text-4xl font-bold mt-3">
+            {{ $roomsHistory }}
+            </p>
         </div>
     </div>
 </div>

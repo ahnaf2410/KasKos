@@ -1,4 +1,5 @@
-<x-app-layout>
+@extends('layouts.app', ['activePage' => 'pembayaran'])
+@section('content')
 <div class="max-w-2xl mx-auto py-8">
     <h2 class="text-xl font-semibold mb-5">Tambah Pembayaran Patungan</h2>
 
@@ -75,4 +76,4 @@ function formatRupiah(input) {
     input.value = raw ? new Intl.NumberFormat('id-ID').format(raw) : '';
 }
 </script>
-</x-app-layout>
+@endsection

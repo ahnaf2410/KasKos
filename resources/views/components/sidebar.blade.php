@@ -48,28 +48,26 @@
                 <span class="text-sm">Data Kamar</span>
             </a>
 
-            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 {{ $active == 'kategori-tagihan' ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+            <a href="{{ Route::has('admin.room-history.index') ? route('admin.room-history.index') : '#' }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 {{ $active == 'room-history' ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="text-sm">Room History</span>
+            </a>
+
+            <a href="{{ route('admin.bill-categories.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 {{ $active == 'kategori-tagihan' ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 <span class="text-sm">Kategori Tagihan</span>
             </a>
 
-            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 {{ $active == 'tagihan' ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+            <a href="{{ route('admin.personal-payments.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 {{ $active == 'tagihan' ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                <span class="text-sm">Tagihan Bulanan</span>
+                <span class="text-sm">Pembayaran Personal</span>
             </a>
 
-            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 {{ $active == 'pembayaran' ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+            <a href="{{ route('admin.payments.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 {{ $active == 'pembayaran' ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                <span class="text-sm">Verifikasi Pembayaran</span>
-            </a>
-
-            <div class="pt-4 pb-2 px-4">
-                <p class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">Akun Pengguna</p>
-            </div>
-
-            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 {{ $active == 'profile' ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                <span class="text-sm">Profil Saya</span>
+                <span class="text-sm">Pembayaran Patungan</span>
             </a>
         </nav>
     </div>

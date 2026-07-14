@@ -1,47 +1,218 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-[#E84855] flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M4 21V7a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v14M14 21V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v17" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 9h1M7 12h1M7 15h1M10 9h1M10 12h1M10 15h1M17 6h1M17 9h1M17 12h1M17 15h1" stroke-linecap="round"/>
-                    <path d="M4 21h16" stroke-linecap="round"/>
-                </svg>
-            </div>
-            <h2 class="font-semibold text-xl text-slate-800 leading-tight">
-                {{ __('Dashboard') }}
-            </h2>
-        </div>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm border border-slate-100 rounded-2xl">
-                <div class="px-6 py-24 flex flex-col items-center justify-center text-center">
+@section('content')
 
-                    <!-- Icon -->
-                    <div class="w-16 h-16 rounded-2xl bg-[#E84855]/10 flex items-center justify-center mb-5">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#E84855]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <circle cx="12" cy="12" r="9"/>
-                            <path d="M12 7v5l3 3" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
+<div class="container mx-auto px-6 py-8">
 
-                    <h3 class="text-2xl font-bold text-[#C3323E]">Coming Soon</h3>
-                    <p class="mt-2 text-sm text-slate-500 max-w-sm">
-                        Kamu sudah berhasil login, {{ __("You're logged in!") }} Halaman dashboard KasKos masih dalam pengembangan.
-                    </p>
 
-                    <span class="mt-5 inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-medium text-amber-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 8v4l3 3" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Sedang dikembangkan
-                    </span>
+<h1 class="text-3xl font-bold mb-6">
+    Dashboard Tenant
+</h1>
 
-                </div>
-            </div>
-        </div>
-    </div>
-</x-app-layout>
+
+<!-- PROFILE -->
+<div class="bg-white shadow rounded-lg p-6 mb-6">
+
+<h2 class="text-xl font-semibold mb-4">
+    Profil Tenant
+</h2>
+
+<p>
+    Nama :
+    <b>{{ $user->name }}</b>
+</p>
+
+<p>
+    Email :
+    {{ $user->email }}
+</p>
+
+<p>
+    Nomor HP :
+    {{ $user->phone ?? '-' }}
+</p>
+
+</div>
+
+
+
+<!-- ROOM INFO -->
+<div class="bg-white shadow rounded-lg p-6 mb-6">
+
+<h2 class="text-xl font-semibold mb-4">
+    Informasi Kamar
+</h2>
+
+
+@if($roomHistory)
+
+<p>
+    Nomor Kamar :
+    <b>
+        {{ $roomHistory->room->room_number }}
+    </b>
+</p>
+
+
+<p>
+    Harga Sewa :
+    Rp {{ number_format($roomHistory->room->price) }}
+</p>
+
+
+<p>
+    Mulai Tinggal :
+    {{ $roomHistory->start_date }}
+</p>
+
+
+@else
+
+<p>
+    Belum memiliki kamar
+</p>
+
+@endif
+
+
+</div>
+
+
+
+
+<!-- TAGIHAN -->
+<div class="bg-white shadow rounded-lg p-6 mb-6">
+
+
+<h2 class="text-xl font-semibold mb-4">
+    Tagihan Saat Ini
+</h2>
+
+
+@if($currentPayment)
+
+<p>
+    Nominal:
+    <b>
+    Rp {{ number_format($currentPayment->amount) }}
+    </b>
+</p>
+
+
+<p>
+Status:
+
+@if($currentPayment->status == 'paid')
+
+<span class="text-green-600">
+Lunas
+</span>
+
+@elseif($currentPayment->status == 'pending')
+
+<span class="text-yellow-600">
+Menunggu Verifikasi
+</span>
+
+@else
+
+<span class="text-red-600">
+Belum Bayar
+</span>
+
+@endif
+
+
+</p>
+
+
+@else
+
+<p>
+Belum ada tagihan
+</p>
+
+@endif
+
+
+</div>
+
+
+
+
+
+<!-- PAYMENT HISTORY -->
+
+<div class="bg-white shadow rounded-lg p-6">
+
+
+<h2 class="text-xl font-semibold mb-4">
+Riwayat Pembayaran
+</h2>
+
+
+<table class="w-full">
+
+<thead>
+
+<tr class="border-b">
+
+<th class="text-left">
+Tanggal
+</th>
+
+<th>
+Nominal
+</th>
+
+<th>
+Status
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+
+@foreach($payments as $payment)
+
+<tr class="border-b">
+
+
+<td>
+{{ $payment->created_at->format('d M Y') }}
+</td>
+
+
+<td>
+Rp {{ number_format($payment->amount) }}
+</td>
+
+
+<td>
+
+{{ ucfirst($payment->status) }}
+
+</td>
+
+
+</tr>
+
+
+@endforeach
+
+
+</tbody>
+
+</table>
+
+
+</div>
+
+
+</div>
+
+@endsection

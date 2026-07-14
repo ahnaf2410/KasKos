@@ -1,4 +1,4 @@
-@extends('layouts.tenant', ['activePage' => 'dashboard'])
+@extends('layouts.app', ['activePage' => 'dashboard'])
 
 @section('content')
 
