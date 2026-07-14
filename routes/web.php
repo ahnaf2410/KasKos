@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\PaymentController; //payment-melani-coba
 use App\Http\Controllers\DenahController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,6 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/tenant/dashboard', [TenantDashboardController::class, 'index'])->name('tenant.dashboard');
 });
 
 Route::middleware(['auth', 'role:Admin'])
