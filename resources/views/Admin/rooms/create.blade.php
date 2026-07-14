@@ -1,4 +1,6 @@
-<x-app-layout>
+@extends('layouts.app', ['activePage' => 'rooms'])
+
+@section('content')
 
     <div class="max-w-3xl mx-auto py-8">
 
@@ -35,6 +37,27 @@
 
         </div>
 
+        <div>
+    <label>Penghuni</label>
+
+    <select
+        name="tenant_id"
+        class="w-full border rounded p-2">
+
+        <option value="">Kosong</option>
+
+        @foreach($tenants as $tenant)
+
+            <option value="{{ $tenant->id }}">
+                {{ $tenant->name }}
+            </option>
+
+        @endforeach
+
+    </select>
+
+</div>
+
     </div>
 
-</x-app-layout>
+@endsection

@@ -1,4 +1,6 @@
-<x-app-layout>
+@extends('layouts.app', ['activePage' => 'rooms'])
+
+@section('content')
 
 <div class="max-w-7xl mx-auto py-8">
 
@@ -47,6 +49,8 @@
 
                     <th>Status</th>
 
+                    <th>Penghuni</th>
+
                     <th width="170">Action</th>
 
                 </tr>
@@ -71,6 +75,8 @@
                         Rp {{ number_format($room->rental_price,0,',','.') }}
                     </td>
 
+                    
+
                     <td>
 
                         @if($room->status=='vacant')
@@ -88,6 +94,12 @@
                         @endif
 
                     </td>
+
+                    <td>
+
+{{ $room->tenant?->name ?? '-' }}
+
+</td>
 
                     <td>
 
@@ -152,4 +164,4 @@
 
 </div>
 
-</x-app-layout>
+@endsection
