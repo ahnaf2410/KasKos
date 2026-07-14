@@ -1,82 +1,171 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-[#E84855] flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M3 10.5 12 3l9 7.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M5 9.5V21h14V9.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-            <h2 class="font-semibold text-xl text-slate-800 leading-tight">
-                {{ __('Denah Kamar') }}
-            </h2>
+@extends('layouts.app', ['activePage' => 'denah'])
+
+@section('content')
+<div class="space-y-6">
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <h2 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">Denah Visual Kamar</h2>
+            <p class="text-xs text-slate-400 mt-1">Pantau ketersediaan slot kamar kos secara real-time grid.</p>
         </div>
-    </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-
-            <div class="bg-white border border-slate-100 rounded-2xl shadow-sm p-5 flex flex-wrap items-center gap-6">
-                <div class="flex items-center gap-2">
-                    <span class="w-3.5 h-3.5 rounded-full bg-emerald-500"></span>
-                    <span class="text-sm text-slate-600">Kosong</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-3.5 h-3.5 rounded-full bg-[#E84855]"></span>
-                    <span class="text-sm text-slate-600">Terisi</span>
-                </div>
-                <span class="ml-auto text-xs text-slate-400 italic">Tampilan visual saja — klaim & pindah kamar belum tersedia di tahap ini.</span>
+        <div class="flex flex-wrap items-center gap-4 bg-white px-4 py-2.5 rounded-xl border border-slate-100 text-xs font-semibold shadow-sm">
+            <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-500 block"></span>
+                <span class="text-slate-600">Kosong (Tersedia)</span>
             </div>
-
-            @forelse ($kamars as $lantai => $items)
-                <div class="bg-white border border-slate-100 rounded-2xl shadow-sm p-6">
-                    <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">
-                        Lantai {{ $lantai }}
-                    </h3>
-
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                        @foreach ($items as $kamar)
-                            @php
-                                // Disesuaikan dengan value di database kamu ('vacant' = kosong)
-                                $isKosong = strtolower($kamar->status) === 'vacant';
-                            @endphp
-
-                            <div class="rounded-xl border-2 p-4 flex flex-col items-center justify-center text-center transition
-                                {{ $isKosong
-                                    ? 'bg-emerald-50 border-emerald-300'
-                                    : 'bg-[#E84855]/10 border-[#E84855]/40' }}">
-
-                                @if (!$isKosong)
-                                    <div class="w-8 h-8 rounded-full bg-[#E84855] text-white flex items-center justify-center text-xs font-semibold mb-2">
-                                        {{-- Menggunakan relasi tenant_id / atau fallback huruf 'T' jika relasi belum diset --}}
-                                        {{ strtoupper(substr($kamar->penghuni->name ?? 'T', 0, 1)) }}
-                                    </div>
-                                @else
-                                    <div class="w-8 h-8 rounded-full bg-emerald-500/15 text-emerald-600 flex items-center justify-center mb-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
-                                        </svg>
-                                    </div>
-                                @endif
-
-                                {{-- Mengubah nomor_kamar menjadi room_number --}}
-                                <span class="font-semibold text-sm {{ $isKosong ? 'text-emerald-700' : 'text-[#C3323E]' }}">
-                                    {{ $kamar->room_number }}
-                                </span>
-
-                                <span class="text-xs mt-0.5 {{ $isKosong ? 'text-emerald-600' : 'text-[#C3323E]/80' }}">
-                                    {{ $isKosong ? 'Kosong' : ($kamar->penghuni->name ?? 'Terisi') }}
-                                </span>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @empty
-                <div class="bg-white border border-slate-100 rounded-2xl shadow-sm p-12 text-center text-slate-400">
-                    <p class="text-sm">Belum ada data kamar.</p>
-                </div>
-            @endforelse
-
+            <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 rounded-full bg-indigo-500 block"></span>
+                <span class="text-slate-600">Menunggu Verifikasi</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 rounded-full bg-rose-500 block"></span>
+                <span class="text-slate-600">Terisi (Aktif)</span>
+            </div>
         </div>
     </div>
-</x-app-layout>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center space-x-4">
+            <div class="p-3 bg-slate-50 text-slate-600 rounded-xl">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+            </div>
+            <div>
+                <span class="text-[10px] font-bold text-slate-400 tracking-wider block uppercase">Total Kamar</span>
+                <span class="text-lg font-bold text-slate-800">24 Kamar</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center space-x-4">
+            <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div>
+                <span class="text-[10px] font-bold text-slate-400 tracking-wider block uppercase">Tersedia</span>
+                <span class="text-lg font-bold text-slate-800">8 Slot</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center space-x-4">
+            <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div>
+                <span class="text-[10px] font-bold text-slate-400 tracking-wider block uppercase">Pending</span>
+                <span class="text-lg font-bold text-slate-800">2 Kamar</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center space-x-4">
+            <div class="p-3 bg-rose-50 text-rose-600 rounded-xl">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            </div>
+            <div>
+                <span class="text-[10px] font-bold text-slate-400 tracking-wider block uppercase">Terisi</span>
+                <span class="text-lg font-bold text-slate-800">14 Kamar</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="border-b border-slate-200 flex space-x-6 text-sm font-semibold">
+        <button class="border-b-2 border-rose-500 text-rose-600 pb-3 px-1 transition focus:outline-none">Semua Lantai</button>
+        <button class="border-b-2 border-transparent text-slate-400 hover:text-slate-600 pb-3 px-1 transition focus:outline-none">Lantai 1</button>
+        <button class="border-b-2 border-transparent text-slate-400 hover:text-slate-600 pb-3 px-1 transition focus:outline-none">Lantai 2</button>
+        <button class="border-b-2 border-transparent text-slate-400 hover:text-slate-600 pb-3 px-1 transition focus:outline-none">Lantai 3</button>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+
+        <div class="bg-white rounded-2xl border-2 border-rose-500 shadow-sm p-4 relative flex flex-col justify-between h-36 hover:shadow-md transition">
+            <div>
+                <div class="flex items-center justify-between">
+                    <span class="text-base font-bold text-slate-900">A-101</span>
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-50 text-rose-600 uppercase">Terisi</span>
+                </div>
+                <p class="text-xs font-semibold text-slate-700 mt-2 truncate">Dimas Wibowo</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">Premium Room</p>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-50 pt-2 mt-2">
+                <span class="text-[10px] font-bold text-slate-400">Jatuh Tempo:</span>
+                <span class="text-[11px] font-bold text-rose-600">25 Jul 2026</span>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border-2 border-emerald-500 shadow-sm p-4 relative flex flex-col justify-between h-36 hover:shadow-md transition">
+            <div>
+                <div class="flex items-center justify-between">
+                    <span class="text-base font-bold text-slate-900">A-102</span>
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-600 uppercase">Kosong</span>
+                </div>
+                <p class="text-xs font-medium italic text-slate-400 mt-2">Belum ada penghuni</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">Standard Room</p>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-50 pt-2 mt-2">
+                <span class="text-[10px] font-bold text-slate-400">Harga Sewa:</span>
+                <span class="text-[11px] font-bold text-slate-700">Rp 1.2M /bln</span>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border-2 border-indigo-500 shadow-sm p-4 relative flex flex-col justify-between h-36 hover:shadow-md transition">
+            <div>
+                <div class="flex items-center justify-between">
+                    <span class="text-base font-bold text-slate-900">A-103</span>
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-50 text-indigo-600 uppercase">Pending</span>
+                </div>
+                <p class="text-xs font-semibold text-slate-700 mt-2 truncate">Siti Rahma</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">Standard Room</p>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-50 pt-2 mt-2">
+                <span class="text-[10px] font-bold text-slate-400">Aksi:</span>
+                <a href="#" class="text-[10px] font-bold text-indigo-600 hover:underline">Cek Bukti TF →</a>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 bg-slate-50 shadow-sm p-4 relative flex flex-col justify-between h-36 hover:shadow-md transition">
+            <div>
+                <div class="flex items-center justify-between">
+                    <span class="text-base font-bold text-slate-900">A-104</span>
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-50 text-rose-600 uppercase">Terisi</span>
+                </div>
+                <p class="text-xs font-semibold text-slate-700 mt-2 truncate">Budi Santoso</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">VIP Room</p>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-100 pt-2 mt-2">
+                <span class="text-[10px] font-bold text-slate-400">Jatuh Tempo:</span>
+                <span class="text-[11px] font-bold text-slate-700">02 Ags 2026</span>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border-2 border-emerald-500 shadow-sm p-4 relative flex flex-col justify-between h-36 hover:shadow-md transition">
+            <div>
+                <div class="flex items-center justify-between">
+                    <span class="text-base font-bold text-slate-900">A-201</span>
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-600 uppercase">Kosong</span>
+                </div>
+                <p class="text-xs font-medium italic text-slate-400 mt-2">Belum ada penghuni</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">Premium Room</p>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-50 pt-2 mt-2">
+                <span class="text-[10px] font-bold text-slate-400">Harga Sewa:</span>
+                <span class="text-[11px] font-bold text-slate-700">Rp 1.5M /bln</span>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 bg-slate-50 shadow-sm p-4 relative flex flex-col justify-between h-36 hover:shadow-md transition">
+            <div>
+                <div class="flex items-center justify-between">
+                    <span class="text-base font-bold text-slate-900">A-202</span>
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-50 text-rose-600 uppercase">Terisi</span>
+                </div>
+                <p class="text-xs font-semibold text-slate-700 mt-2 truncate">Amanda Putri</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">Premium Room</p>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-100 pt-2 mt-2">
+                <span class="text-[10px] font-bold text-slate-400">Jatuh Tempo:</span>
+                <span class="text-[11px] font-bold text-rose-600">18 Jul 2026</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+@endsection
