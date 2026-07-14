@@ -3,45 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Room;
 use App\Models\Payment;
-use App\Models\PersonalPayment;
 
 class DashboardController extends Controller
 {
     public function admin()
     {
-        $totalUsers = User::count();
+        // Total uang yang sudah diverifikasi
+        $totalKasKos = Payment::where('status', 'verified')
+            ->sum('split_amount');
 
-        $totalRooms = Room::count();
+        // Statistik kamar
+        $kamarTerisi = Room::whereNotNull('tenant_id')->count();
+        $kamarKosong = Room::whereNull('tenant_id')->count();
 
-        $occupiedRooms = Room::whereNotNull('tenant_id')->count();
+        // Jumlah pembayaran yang menunggu verifikasi
+        $verifikasi = Payment::where('status', 'pending')->count();
 
-        $emptyRooms = Room::whereNull('tenant_id')->count();
-
-        $pendingPayments = Payment::where('status', 'pending')->count();
-
-        $verifiedPayments = Payment::where('status', 'verified')->count();
-
-        $rejectedPayments = Payment::where('status', 'rejected')->count();
-
-        $personalPayments = PersonalPayment::count();
-
+        // Data pembayaran terbaru
         $recentPayments = Payment::with('user')
             ->latest()
             ->take(5)
             ->get();
 
         return view('dashboard.admin', compact(
-            'totalUsers',
-            'totalRooms',
-            'occupiedRooms',
-            'emptyRooms',
-            'pendingPayments',
-            'verifiedPayments',
-            'rejectedPayments',
-            'personalPayments',
+            'totalKasKos',
+            'kamarTerisi',
+            'kamarKosong',
+            'verifikasi',
             'recentPayments'
         ));
     }

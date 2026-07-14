@@ -12,11 +12,32 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
         @php
-        $cards=[
-        ['Total Penghuni','18','👥','bg-blue-600'],
-        ['Total Kamar','25','🏠','bg-green-600'],
-        ['Tagihan Aktif','34','💳','bg-yellow-500'],
-        ['Pendapatan','Rp15.5 Jt','💰','bg-red-600']];
+        $cards = [
+            [
+                'Total KasKos',
+                'Rp ' . number_format($totalKasKos, 0, ',', '.'),
+                '💰',
+                'bg-emerald-600'
+            ],
+            [
+                'Kamar Terisi',
+                $kamarTerisi,
+                '🏠',
+                'bg-blue-600'
+            ],
+            [
+                'Kamar Kosong',
+                $kamarKosong,
+                '🚪',
+                'bg-orange-500'
+            ],
+            [
+                'Verifikasi',
+                $verifikasi,
+                '✔️',
+                'bg-red-600'
+            ],
+        ];
         @endphp
 
         @foreach($cards as $c)
@@ -51,18 +72,44 @@
                     </tr>
                 </thead>
                 <tbody>
-                @for($i=1;$i<=6;$i++)
-                    <tr class="border-b">
-                        <td class="p-3">Penghuni {{ $i }}</td>
-                        <td class="p-3">Tagihan Bulanan</td>
-                        <td class="p-3">Rp450.000</td>
-                        <td class="p-3">
-                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                                Lunas
+                @forelse($recentPayments as $payment)
+                <tr class="border-b">
+                    <td class="p-3">{{ $payment->user->name }}</td>
+
+                    <td class="p-3">
+                        {{ optional($payment->bill)->title ?? '-' }}
+                    </td>
+
+                    <td class="p-3">
+                        Rp {{ number_format($payment->split_amount,0,',','.') }}
+                    </td>
+
+                    <td class="p-3">
+                        @if($payment->status == 'verified')
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                                Verified
                             </span>
-                        </td>
-                    </tr>
-                @endfor
+                        @elseif($payment->status == 'pending')
+                            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+                                Pending
+                            </span>
+                        @else
+                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full">
+                                Rejected
+                            </span>
+                        @endif
+                    </td>
+                </tr>
+
+                @empty
+
+                <tr>
+                <td colspan="4" class="text-center py-8 text-gray-500">
+                Belum ada data pembayaran
+                </td>
+                </tr>
+
+                @endforelse
                 </tbody>
             </table>
         </div>
