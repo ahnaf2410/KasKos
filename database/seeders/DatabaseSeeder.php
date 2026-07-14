@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             BillSeeder::class,
             PaymentSeeder::class,
             PersonalPaymentSeeder::class,
+            RoomSeeder::class,
         ]);
     }
 }
