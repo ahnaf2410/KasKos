@@ -62,15 +62,6 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 <span class="text-sm">Pembayaran Patungan</span>
             </a>
-
-            <div class="pt-4 pb-2 px-4">
-                <p class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">Akun Pengguna</p>
-            </div>
-
-            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 {{ $active == 'profile' ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                <span class="text-sm">Profil Saya</span>
-            </a>
         </nav>
     </div>
 
