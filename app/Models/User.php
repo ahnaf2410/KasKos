@@ -43,6 +43,7 @@ class User extends Authenticatable
 public function roomHistories()
 {
     return $this->hasMany(RoomHistory::class);
+}
 public function bills()
 {
     return $this->hasMany(Bill::class, 'tenant_id');

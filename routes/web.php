@@ -3,16 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\PaymentController; //payment-melani-coba
+
 use App\Http\Controllers\DenahController;
 use App\Http\Controllers\Admin\BillCategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use App\Http\Controllers\Admin\PaymentController; //payment-melani
 use App\Http\Controllers\Admin\PersonalPaymentController;//personal-payment-melani
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\DenahController;
-use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
+
 use App\Http\Controllers\Tenant\RoomController as TenantRoomController;
 
 Route::get('/', function () {
