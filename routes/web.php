@@ -26,10 +26,14 @@ Route::middleware(['auth', 'role:Admin'])
     ->name('admin.')
     ->group(function () {
 
-        Route::resource('rooms', RoomController::class);
+       Route::resource('rooms', RoomController::class);
         Route::resource('payments', PaymentController::class); //payment-melani-coba
         Route::get('/denah', [DenahController::class, 'index'])
         ->name('denah.index');
+        Route::patch(
+    'rooms/{room}/clear',
+    [RoomController::class,'clear']
+)->name('rooms.clear');
 
 
     });

@@ -17,6 +17,24 @@
 
                 @include('admin.rooms._form')
 
+                <select name="tenant_id">
+
+<option value="">Kosong</option>
+
+@foreach($tenants as $tenant)
+
+<option
+value="{{ $tenant->id }}"
+{{ $room->tenant_id == $tenant->id ? 'selected' : '' }}>
+
+{{ $tenant->name }}
+
+</option>
+
+@endforeach
+
+</select>
+
                 <div class="mt-6 flex gap-3">
 
                     <button

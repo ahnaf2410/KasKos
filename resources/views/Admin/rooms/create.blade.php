@@ -35,6 +35,27 @@
 
         </div>
 
+        <div>
+    <label>Penghuni</label>
+
+    <select
+        name="tenant_id"
+        class="w-full border rounded p-2">
+
+        <option value="">Kosong</option>
+
+        @foreach($tenants as $tenant)
+
+            <option value="{{ $tenant->id }}">
+                {{ $tenant->name }}
+            </option>
+
+        @endforeach
+
+    </select>
+
+</div>
+
     </div>
 
 </x-app-layout>

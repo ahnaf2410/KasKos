@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Room extends Model
 {
@@ -15,7 +16,7 @@ class Room extends Model
         'description',
     ];
 
-    public function tenant()
+    public function tenant(): BelongsTo
     {
         return $this->belongsTo(User::class, 'tenant_id');
     }
