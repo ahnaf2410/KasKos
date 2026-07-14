@@ -59,7 +59,6 @@
         <div class="xl:col-span-2 bg-white rounded-2xl shadow p-6">
             <div class="flex justify-between mb-4">
                 <h2 class="font-bold text-xl">Aktivitas Pembayaran</h2>
-                <button class="text-sm text-red-600">Lihat Semua</button>
             </div>
 
             <table class="w-full">
@@ -118,10 +117,30 @@
             <div class="bg-white rounded-2xl shadow p-5">
                 <h3 class="font-bold mb-3">Tagihan Belum Lunas</h3>
                 <div class="space-y-3">
-                    <div class="flex justify-between"><span>Air</span><span>Rp50.000</span></div>
-                    <div class="flex justify-between"><span>Listrik</span><span>Rp120.000</span></div>
-                    <div class="flex justify-between"><span>Internet</span><span>Rp100.000</span></div>
+
+                @forelse($unpaidBills as $bill)
+
+                <div class="flex justify-between">
+                    <span>
+                        {{ $bill['title'] }}
+                    </span>
+
+                    <span>
+                        Rp {{ number_format($bill['amount'],0,',','.') }}
+                    </span>
                 </div>
+
+                @empty
+
+                <p class="text-gray-500">
+                    Tidak ada tagihan
+                </p>
+
+                @endforelse
+
+                </div>
+
+                    </div>
             </div>
 
             <div class="bg-white rounded-2xl shadow p-5">
@@ -140,27 +159,39 @@
             <div class="bg-white rounded-2xl shadow p-5">
                 <h3 class="font-bold mb-4">Okupansi Kamar</h3>
                 <div class="w-full bg-gray-200 rounded-full h-3">
-                    <div class="bg-red-600 h-3 rounded-full" style="width:72%"></div>
+                    <div 
+                        class="bg-red-600 h-3 rounded-full"
+                        style="width: {{ $occupancyPercentage }}%">
+                        </div>
                 </div>
-                <p class="mt-2 text-sm text-gray-600">18 dari 25 kamar terisi (72%)</p>
-            </div>
+                <p class="mt-2 text-sm text-gray-600">
+                    {{ $kamarTerisi }} dari {{ $totalRooms }}
+                    kamar terisi ({{ $occupancyPercentage }}%)
+                </p>
+        </div>
         </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
         <div class="bg-white rounded-2xl shadow p-5">
             <h3 class="font-bold">Penghuni Baru</h3>
-            <p class="text-4xl font-bold mt-3">4</p>
+            <p class="text-4xl font-bold mt-3">
+            {{ $newTenants }}
+            </p>
         </div>
 
         <div class="bg-white rounded-2xl shadow p-5">
             <h3 class="font-bold">Pembayaran Pending</h3>
-            <p class="text-4xl font-bold mt-3">6</p>
+            <p class="text-4xl font-bold mt-3">
+            {{ $pendingPayments }}
+            </p>
         </div>
 
         <div class="bg-white rounded-2xl shadow p-5">
             <h3 class="font-bold">Rooms History</h3>
-            <p class="text-4xl font-bold mt-3">12</p>
+            <p class="text-4xl font-bold mt-3">
+            {{ $roomsHistory }}
+            </p>
         </div>
     </div>
 </div>
