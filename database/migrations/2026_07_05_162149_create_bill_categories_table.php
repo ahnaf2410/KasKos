@@ -11,7 +11,10 @@ return new class extends Migration
         Schema::create('bill_categories', function (Blueprint $table) {
             $table->integer('id')->autoIncrement()->primary(); // Sesuai ERD: int
             $table->string('category_name'); // electricity, wifi, gas, trash, etc
-            $table->string('icon_or_description')->nullable();
+
+            // PERBAIKAN: ->after() dihapus. Posisinya cukup ditaruh di bawah 'category_name' agar urutannya pas
+            $table->integer('price')->default(0);
+
             $table->boolean('default_active')->default(true);
             $table->timestamps();
         });
