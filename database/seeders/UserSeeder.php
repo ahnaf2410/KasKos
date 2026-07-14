@@ -15,20 +15,18 @@ class UserSeeder extends Seeder
             'name' => 'Admin KasKos',
             'username' => 'admin',
             'password' => Hash::make('password'),
-            'id' => 1,
         ]);
 
-        $admin->assignRole('admin');
+        $admin->assignRole('Admin');
 
         // Admin 2
         $admin2 = User::create([
             'name' => 'Ahnaf Admin',
             'username' => 'admin_kaskos',
             'password' => Hash::make('password123'),
-            'id' => 2,
         ]);
 
-        $admin->assignRole('admin');
+        $admin->assignRole('Admin');
 
 
         // Tenant 1
@@ -38,7 +36,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        $tenant1->assignRole('tenant');
+        $tenant1->assignRole('Tenant');
 
 
         // Tenant 2
@@ -48,7 +46,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        $tenant2->assignRole('tenant');
+        $tenant2->assignRole('Tenant');
 
 
         // Tenant 3
@@ -58,7 +56,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('tenant123'),
         ]);
 
-        $tenant3->assignRole('tenant');
+        $tenant3->assignRole('Tenant');
 
     }
 }
