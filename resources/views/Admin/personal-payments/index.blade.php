@@ -1,5 +1,7 @@
-<x-app-layout>
+@extends('layouts.app', ['activePage' => 'tagihan'])
 
+
+@section('content')
 <div class="max-w-7xl mx-auto py-8">
 
     {{-- Header --}}
@@ -305,5 +307,4 @@
     </div>
 
 </div>
-
-</x-app-layout>
+@endsection
