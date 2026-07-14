@@ -48,3 +48,4 @@ return new class extends Migration
         Schema::dropIfExists('personal_payments');
     }
 };
+//benerin migration ini
