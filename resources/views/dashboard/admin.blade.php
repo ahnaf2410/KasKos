@@ -7,8 +7,7 @@
             <h1 class="text-3xl font-bold text-gray-800">Dashboard Admin</h1>
             <p class="text-gray-500">Selamat datang di KasKos.</p>
         </div>
-        <a href="#" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">+ Tambah Kamar</a>
-    </div>
+        </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
         @php
@@ -61,7 +60,16 @@
                 <h2 class="font-bold text-xl">Aktivitas Pembayaran</h2>
             </div>
 
+    <!-- Aktivitas Pembayaran -->
+    <div class="xl:col-span-2 bg-white rounded-2xl shadow p-6">
+
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="font-bold text-xl">Aktivitas Pembayaran</h2>
+        </div>
+
+        <div class="overflow-x-auto">
             <table class="w-full">
+
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="p-3 text-left">Penghuni</th>
@@ -70,6 +78,7 @@
                         <th class="p-3 text-left">Status</th>
                     </tr>
                 </thead>
+
                 <tbody>
                 @forelse($recentPayments as $payment)
                 <tr class="border-b">
@@ -110,6 +119,7 @@
 
                 @endforelse
                 </tbody>
+
             </table>
         </div>
 
@@ -142,19 +152,22 @@
 
                     </div>
             </div>
+        </div>
 
-            <div class="bg-white rounded-2xl shadow p-5">
-                <h3 class="font-bold mb-3">Lokasi</h3>
-                <div class="rounded-xl overflow-hidden h-56">
-                    <iframe
-                        src="https://www.google.com/maps?q=Universitas+Muhammadiyah+Bandung&output=embed"
-                        width="100%"
-                        height="100%"
-                        style="border:0;"
-                        loading="lazy">
-                    </iframe>
-                </div>
+        <!-- Lokasi -->
+        <div class="bg-white rounded-2xl shadow p-5">
+            <h3 class="font-bold mb-3">Lokasi</h3>
+
+            <div class="rounded-xl overflow-hidden h-56">
+                <iframe
+                    src="https://www.google.com/maps?q=Universitas+Muhammadiyah+Bandung&output=embed"
+                    width="100%"
+                    height="100%"
+                    style="border:0;"
+                    loading="lazy">
+                </iframe>
             </div>
+        </div>
 
             <div class="bg-white rounded-2xl shadow p-5">
                 <h3 class="font-bold mb-4">Okupansi Kamar</h3>
@@ -170,7 +183,10 @@
                 </p>
         </div>
         </div>
+
     </div>
+
+</div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
         <div class="bg-white rounded-2xl shadow p-5">
