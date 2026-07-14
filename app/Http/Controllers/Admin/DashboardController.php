@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Room;
 use App\Models\Payment;
 
+
 class DashboardController extends Controller
 {
     public function admin()

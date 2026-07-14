@@ -34,4 +34,15 @@ class User extends Authenticatable
 {
     return $this->hasOne(Room::class, 'tenant_id');
 }
+
+public function roomHistories()
+{
+    return $this->hasMany(RoomHistory::class);
+}
+
+
+public function payments()
+{
+    return $this->hasMany(PersonalPayment::class);
+}
 }
