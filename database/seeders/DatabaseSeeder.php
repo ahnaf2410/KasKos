@@ -5,16 +5,18 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+
+    $this->call([
+    RoleSeeder::class,
+]);
         // 1. Seed Tabel Roles (Sesuai ERD)
-        DB::table('roles')->insert([
-            ['id' => 1, 'name' => 'Admin', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 2, 'name' => 'Tenant', 'created_at' => now(), 'updated_at' => now()],
-        ]);
+       
 
         // 2. Seed Tabel Users (Gunakan Password yang DI-HASH)
         DB::table('users')->insert([
@@ -36,11 +38,11 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+        User::find(1)?->assignRole('Admin');
+User::find(2)?->assignRole('Tenant');
+
         // 3. Seed Tabel Model Has Roles (Hubungkan User ke Role)
-        DB::table('model_has_roles')->insert([
-            ['role_id' => 1, 'model_id' => 1, 'model_type' => 'App\Models\User'], // Admin
-            ['role_id' => 2, 'model_id' => 2, 'model_type' => 'App\Models\User'], // Tenant
-        ]);
+       
 
         // 4. Seed Tabel Bill Categories (Sesuai Keterangan di ERD)
         DB::table('bill_categories')->insert([
