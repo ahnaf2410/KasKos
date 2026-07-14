@@ -1,4 +1,6 @@
-<x-app-layout>
+@extends('layouts.app', ['activePage' => 'rooms'])
+
+@section('content')
 
     <div class="max-w-3xl mx-auto py-8">
 
@@ -58,4 +60,4 @@
 
     </div>
 
-</x-app-layout>
+@endsection
