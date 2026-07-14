@@ -169,7 +169,7 @@
 
                         <div class="w-11 h-11 rounded-full bg-red-100 flex items-center justify-center font-bold text-red-700">
 
-                            {{ strtoupper(substr($payment->user->name,0,2)) }}
+                            {{ strtoupper(substr($payment->user?->name ?? '--',0,2)) }}
 
                         </div>
 
@@ -177,7 +177,7 @@
 
                             <div class="font-semibold">
 
-                                {{ $payment->user->name }}
+                                {{ $payment->user?->name ?? '-' }}
 
                             </div>
 
@@ -189,7 +189,7 @@
 
                 <td>
 
-                    {{ $payment->room->room_number }}
+                    {{ $payment->room?->room_number ?? '-' }}
 
                 </td>
 
@@ -211,7 +211,7 @@
 
                 <td>
 
-                    {{ $payment->due_date->format('d M Y') }}
+                    {{ $payment->due_date?->format('d M Y') ?? '-' }}
 
                 </td>
 
@@ -307,4 +307,9 @@
     </div>
 
 </div>
+<<<<<<< HEAD
 @endsection
+=======
+
+@endsection
+>>>>>>> 5e316f4a267d9b36054d8a2bfc5175cf749ea18c

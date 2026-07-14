@@ -1,5 +1,4 @@
-@extends('layouts.app', ['activePage' => 'pembayaran'])
-@section('content')
+<x-app-layout>
 <div class="max-w-7xl mx-auto py-8">
     @if(session('success'))
         <div class="bg-green-100 text-green-700 p-4 rounded mb-5">
@@ -96,4 +95,4 @@
         {{ $payments->links() }}
     </div>
 </div>
-@endsection
+</x-app-layout>
