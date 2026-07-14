@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\PaymentController; //payment-melani-coba
 use App\Http\Controllers\DenahController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
+use App\Http\Controllers\Admin\PaymentController; //payment-melani
+use App\Http\Controllers\Admin\PersonalPaymentController;//personal-payment-melani
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,6 +33,7 @@ Route::middleware(['auth', 'role:Admin'])
 
        Route::resource('rooms', RoomController::class);
         Route::resource('payments', PaymentController::class); //payment-melani-coba
+        Route::resource('personal-payments', PersonalPaymentController::class); //personal payment
         Route::get('/denah', [DenahController::class, 'index'])
         ->name('denah.index');
         Route::patch(
@@ -39,6 +42,15 @@ Route::middleware(['auth', 'role:Admin'])
 )->name('rooms.clear');
 
 
+        //pembayaran patungan-melani
+        // Route::put('payments/{payment}/verify', [PaymentController::class, 'verify'])->name('payments.verify');
+        // Route::put('payments/{payment}/reject', [PaymentController::class, 'reject'])->name('payments.reject');
+
     });
 
+
+
+
+
 require __DIR__.'/auth.php';
+

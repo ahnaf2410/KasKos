@@ -50,6 +50,36 @@
     </div>
 
     <div>
+    <label class="block text-sm font-medium mb-1">
+        Penghuni
+    </label>
+
+    <select
+        name="tenant_id"
+        class="w-full rounded-lg border-gray-300">
+
+        <option value="">Kosong</option>
+
+        @foreach($tenants as $tenant)
+
+            <option
+                value="{{ $tenant->id }}"
+                @selected(old('tenant_id', $room->tenant_id ?? '') == $tenant->id)>
+
+                {{ $tenant->name }}
+
+            </option>
+
+        @endforeach
+
+    </select>
+
+    @error('tenant_id')
+        <small class="text-red-500">{{ $message }}</small>
+    @enderror
+</div>
+
+    <!-- <div>
         <label class="block text-sm font-medium mb-1">
             Status
         </label>
@@ -73,7 +103,7 @@
         @error('status')
             <small class="text-red-500">{{ $message }}</small>
         @enderror
-    </div>
+    </div> -->
 
     <div>
         <label class="block text-sm font-medium mb-1">
