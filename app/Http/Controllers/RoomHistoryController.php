@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Room;
 use App\Models\RoomHistory;
 use Illuminate\Http\Request;
 
@@ -11,11 +12,12 @@ class RoomHistoryController extends Controller
     {
         $search = $request->query('search');
 
-        // Memuat relasi 'user' dan 'room' sesuai model kamu
+        // Memuat relasi 'user' dan 'room'
+        // Diubah ke latest() agar urut berdasarkan waktu log dibuat (created_at) oleh Observer
         $query = RoomHistory::with(['user', 'room'])
-            ->latest('start_date');
+            ->latest();
 
-        // Cek role user login
+        // Cek role user login (Tenant hanya bisa melihat riwayat milik dirinya sendiri)
         if ($request->user() && !$request->user()->hasRole('Admin')) {
             $query->where('user_id', $request->user()->id);
         }
@@ -36,5 +38,32 @@ class RoomHistoryController extends Controller
         $histories = $query->paginate(10)->withQueryString();
 
         return view('rooms-history.index', compact('histories', 'search'));
+    }
+
+    /**
+     * Get the renting history of a specific room (API Endpoint).
+     */
+    public function history($id)
+    {
+        // 1. Cek apakah kamarnya tersedia di database
+        $room = Room::find($id);
+
+        if (!$room) {
+            return response()->json([
+                'message' => 'Room not found'
+            ], 404);
+        }
+
+        // 2. Ambil semua riwayat dari kamar tersebut + muat data user agar info penyewa muncul di JSON
+        $history = RoomHistory::where('room_id', $id)
+            ->with('user')
+            ->latest()
+            ->get();
+
+        // 3. Kembalikan response JSON berisi info nomor kamar dan riwayat lengkapnya
+        return response()->json([
+            'room_number' => $room->room_number,
+            'history'     => $history
+        ], 200);
     }
 }

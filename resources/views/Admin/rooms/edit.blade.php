@@ -1,4 +1,7 @@
-<x-app-layout>
+@extends('layouts.app', ['activePage' => 'rooms'])
+
+@section('content')
+
 
     <div class="max-w-3xl mx-auto py-8">
 
@@ -16,6 +19,24 @@
                 @method('PUT')
 
                 @include('admin.rooms._form')
+
+                <select name="tenant_id">
+
+<option value="">Kosong</option>
+
+@foreach($tenants as $tenant)
+
+<option
+value="{{ $tenant->id }}"
+{{ $room->tenant_id == $tenant->id ? 'selected' : '' }}>
+
+{{ $tenant->name }}
+
+</option>
+
+@endforeach
+
+</select>
 
                 <div class="mt-6 flex gap-3">
 
@@ -40,4 +61,4 @@
 
     </div>
 
-</x-app-layout>
+@endsection
