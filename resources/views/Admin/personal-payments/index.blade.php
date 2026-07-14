@@ -307,9 +307,4 @@
     </div>
 
 </div>
-<<<<<<< HEAD
 @endsection
-=======
-
-@endsection
->>>>>>> 5e316f4a267d9b36054d8a2bfc5175cf749ea18c
