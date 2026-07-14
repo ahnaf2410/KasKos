@@ -69,6 +69,10 @@ Route::middleware(['auth', 'role:Admin'])
         Route::post('/bill-categories/toggle/{id}', [BillCategoryController::class, 'toggleActive'])->name('bill-categories.toggle');
         Route::put('/bill-categories/{id}', [BillCategoryController::class, 'update'])->name('bill-categories.update');
         Route::delete('/bill-categories/{id}', [BillCategoryController::class, 'destroy'])->name('bill-categories.destroy');
+
+        // Fitur Room History (Dinamis & AJAX)
+        Route::get('/room-history', [RoomHistoryController::class, 'index'])->name('room-history.index');
+        Route::get('/room-history/room/{roomId}/timeline', [RoomHistoryController::class, 'getRoomTimeline']);
     });
 
 // 5. Rute Bawaan Laravel Breeze / Jetstream (Login, Register, Logout, dll)

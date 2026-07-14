@@ -1,69 +1,74 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; // 👈 Hapus '\Admin' karena filenya di luar
 
+use App\Http\Controllers\Controller;
 use App\Models\Room;
 use App\Models\RoomHistory;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class RoomHistoryController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->query('search');
+        // ... isi method index tetap sama seperti sebelumnya
+        $query = RoomHistory::with(['tenant', 'oldRoom', 'newRoom']);
 
-        // Memuat relasi 'user' dan 'room'
-        // Diubah ke latest() agar urut berdasarkan waktu log dibuat (created_at) oleh Observer
-        $query = RoomHistory::with(['user', 'room'])
-            ->latest();
-
-        // Cek role user login (Tenant hanya bisa melihat riwayat milik dirinya sendiri)
-        if ($request->user() && !$request->user()->hasRole('Admin')) {
-            $query->where('user_id', $request->user()->id);
-        }
-
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('user', function ($q2) use ($search) {
-                    $q2->where('name', 'like', "%{$search}%");
-                })
-                ->orWhereHas('room', function ($q2) use ($search) {
-                    // Mencari berdasarkan room_number di tabel rooms
-                    $q2->where('room_number', 'like', "%{$search}%");
-                })
-                ->orWhere('status', 'like', "%{$search}%");
+        // Filter Pencarian Nama Penghuni
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('tenant', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
             });
         }
 
-        $histories = $query->paginate(10)->withQueryString();
-
-        return view('rooms-history.index', compact('histories', 'search'));
-    }
-
-    /**
-     * Get the renting history of a specific room (API Endpoint).
-     */
-    public function history($id)
-    {
-        // 1. Cek apakah kamarnya tersedia di database
-        $room = Room::find($id);
-
-        if (!$room) {
-            return response()->json([
-                'message' => 'Room not found'
-            ], 404);
+        if ($request->filled('room')) {
+            $query->where('new_room_id', $request->room);
         }
 
-        // 2. Ambil semua riwayat dari kamar tersebut + muat data user agar info penyewa muncul di JSON
-        $history = RoomHistory::where('room_id', $id)
-            ->with('user')
-            ->latest()
-            ->get();
+        if ($request->filled('date')) {
+            $query->whereDate('start_date', $request->date);
+        }
 
-        // 3. Kembalikan response JSON berisi info nomor kamar dan riwayat lengkapnya
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $histories = $query->latest()->paginate(10)->withQueryString();
+        $rooms = Room::orderBy('room_number')->get();
+
+        return view('rooms-history.index', compact('histories', 'rooms'));
+    }
+
+    public function getRoomTimeline($roomId)
+    {
+        // ... isi method getRoomTimeline tetap sama
+        $room = Room::findOrFail($roomId);
+        $timeline = RoomHistory::with('tenant')
+            ->where('new_room_id', $roomId)
+            ->orWhere('old_room_id', $roomId)
+            ->orderBy('start_date', 'desc')
+            ->get()
+            ->map(function ($history) use ($roomId) {
+                $isNewRoom = $history->new_room_id == $roomId;
+                $start = Carbon::parse($history->start_date)->translatedFormat('M Y');
+                $end = $history->end_date ? Carbon::parse($history->end_date)->translatedFormat('M Y') : 'Sekarang';
+
+                return [
+                    'date' => "{$start} - {$end}",
+                    'title' => $isNewRoom ? "Dihuni oleh " . ($history->tenant->name ?? 'Tanpa Nama') : "Pindah Keluar: " . ($history->tenant->name ?? 'Tanpa Nama'),
+                    'desc' => $history->notes ?? ($isNewRoom ? "Mulai menempati kamar." : "Pindah ke kamar lain."),
+                    'status' => $history->status,
+                    'badges' => [$isNewRoom ? "Masuk" : "Keluar", "Lantai " . ($room->floor ?? '1')]
+                ];
+            });
+
         return response()->json([
             'room_number' => $room->room_number,
-            'history'     => $history
-        ], 200);
+            'room_type' => $room->room_type ?? 'Standard Room',
+            'floor' => $room->floor ?? '1',
+            'timeline' => $timeline
+        ]);
     }
 }
