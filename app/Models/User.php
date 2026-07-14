@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+
+use App\Models\Room;
+use App\Models\Bill;
+use App\Models\Payment;
+
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
@@ -38,11 +43,15 @@ class User extends Authenticatable
 public function roomHistories()
 {
     return $this->hasMany(RoomHistory::class);
+public function bills()
+{
+    return $this->hasMany(Bill::class, 'tenant_id');
 }
 
 
 public function payments()
 {
     return $this->hasMany(PersonalPayment::class);
+    return $this->hasMany(Payment::class, 'tenant_id');
 }
 }

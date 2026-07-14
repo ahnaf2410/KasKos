@@ -14,6 +14,7 @@ class DenahController extends Controller
     public function index(Request $request) // Sesuaikan nama method-nya (misal: index atau denah)
     {
         // 1. Hitung statistik langsung dari database
+
         // (Silakan sesuaikan string 'kosong', 'pending', 'terisi' dengan isi enum status di DB kamu)
         $totalRooms = Room::count();
         $availableRooms = Room::where('status', 'kosong')->count();
