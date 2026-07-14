@@ -1,4 +1,6 @@
-<x-app-layout>
+@extends('layouts.app', ['activePage' => 'rooms'])
+
+@section('content')
 
 <div class="max-w-7xl mx-auto py-8">
 
@@ -167,7 +169,7 @@
 
                         <div class="w-11 h-11 rounded-full bg-red-100 flex items-center justify-center font-bold text-red-700">
 
-                            {{ strtoupper(substr($payment->user->name,0,2)) }}
+                            {{ strtoupper(substr($payment->user?->name ?? '--',0,2)) }}
 
                         </div>
 
@@ -175,7 +177,7 @@
 
                             <div class="font-semibold">
 
-                                {{ $payment->user->name }}
+                                {{ $payment->user?->name ?? '-' }}
 
                             </div>
 
@@ -187,7 +189,7 @@
 
                 <td>
 
-                    {{ $payment->room->room_number }}
+                    {{ $payment->room?->room_number ?? '-' }}
 
                 </td>
 
@@ -209,7 +211,7 @@
 
                 <td>
 
-                    {{ $payment->due_date->format('d M Y') }}
+                    {{ $payment->due_date?->format('d M Y') ?? '-' }}
 
                 </td>
 
@@ -306,4 +308,4 @@
 
 </div>
 
-</x-app-layout>
+@endsection

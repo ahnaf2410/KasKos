@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use App\Http\Controllers\Admin\PaymentController; //payment-melani
 use App\Http\Controllers\Admin\PersonalPaymentController;//personal-payment-melani
+use App\Http\Controllers\Admin\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
