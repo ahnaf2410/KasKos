@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\BillCategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use App\Http\Controllers\Tenant\RoomController as TenantRoomController;
-
+use App\Http\Controllers\Tenant\PaymentController as TenantPaymentController;
 
 // 1. Rute Publik (Splash Screen / Landing Page)
 Route::get('/', function () {
@@ -32,6 +32,20 @@ Route::middleware('auth')->group(function () {
     // Tenant
     Route::get('/tenant/dashboard', [TenantDashboardController::class, 'index'])->name('tenant.dashboard');
     Route::get('/tenant/kamar-saya', [TenantRoomController::class, 'index'])->name('tenant.rooms.index');
+
+
+    // Pembayaran Patungan Tenant
+    // Pembayaran Patungan Tenant
+    Route::resource('/tenant/payments', TenantPaymentController::class)
+        ->only([
+            'index',
+            'create',
+            'store',
+            'edit',
+            'update',
+            'destroy',
+            'show',
+        ]);
 });
 
 // 4. Kelompok Rute Admin (Membutuhkan Login & Role Admin)
