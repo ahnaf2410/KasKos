@@ -40,6 +40,9 @@ class User extends Authenticatable
     return $this->hasOne(Room::class, 'tenant_id');
 }
 
+public function roomHistories()
+{
+    return $this->hasMany(RoomHistory::class);
 public function bills()
 {
     return $this->hasMany(Bill::class, 'tenant_id');
@@ -48,6 +51,7 @@ public function bills()
 
 public function payments()
 {
+    return $this->hasMany(PersonalPayment::class);
     return $this->hasMany(Payment::class, 'tenant_id');
 }
 }

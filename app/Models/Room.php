@@ -16,8 +16,13 @@ class Room extends Model
         'description',
     ];
 
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'tenant_id');
-    }
+    public function tenant()
+{
+    return $this->belongsTo(User::class, 'tenant_id');
+}
+
+public function histories()
+{
+    return $this->hasMany(RoomHistory::class);
+}
 }

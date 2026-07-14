@@ -9,6 +9,10 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use App\Http\Controllers\Admin\PaymentController; //payment-melani
 use App\Http\Controllers\Admin\PersonalPaymentController;//personal-payment-melani
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\DenahController;
+use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
+use App\Http\Controllers\Tenant\RoomController as TenantRoomController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,6 +52,17 @@ Route::middleware(['auth', 'role:Admin'])
 
     });
 
+Route::middleware(['auth'])->group(function(){
+
+
+    Route::get(
+        '/tenant/kamar-saya',
+        [TenantRoomController::class,'index']
+    )
+    ->name('tenant.rooms.index');
+
+
+});
 
 
 

@@ -29,16 +29,14 @@ class RoomHistory extends Model
     /**
      * Relasi ke data User / Penghuni
      */
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
+   public function room()
+{
+    return $this->belongsTo(Room::class);
+}
 
-    /**
-     * Relasi ke data Kamar (Room)
-     */
-    public function room()
-    {
-        return $this->belongsTo(Room::class, 'room_id');
-    }
+
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }
