@@ -52,7 +52,7 @@
             </a>
 
             {{-- Denah --}}
-            <a href="#"
+            <a href="{{ route('tenant.rooms.index') }}"
                 class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
                 {{ $active == 'denah'
                     ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20'
@@ -86,9 +86,9 @@
             </a>
 
             {{-- Patungan --}}
-            <a href="#"
+            <a href="{{ route('tenant.payments.index') }}"
                 class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
-                {{ $active == 'patungan'
+                {{ $active == 'pembayaran'
                     ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20'
                     : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
 
@@ -101,29 +101,6 @@
 
                 <span class="text-sm">Patungan</span>
             </a>
-
-            {{-- Riwayat --}}
-            <a href="#"
-                class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
-                {{ $active == 'payments'
-                    ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20'
-                    : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
-                <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 17v-2a4 4 0 014-4h7m0 0l-3-3m3 3l-3 3M5 3h6a2 2 0 012 2v4H5a2 2 0 00-2 2v8a2 2 0 002 2h6" />
-                </svg>
-
-                <span class="text-sm">Riwayat Pembayaran</span>
-            </a>
-
-            <div class="pt-4 pb-2 px-4">
-                <p class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
-                    Akun
-                </p>
-            </div>
 
             {{-- Profil --}}
             <a href="{{ route('profile.edit') }}"
