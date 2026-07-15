@@ -54,7 +54,6 @@ class DashboardController extends Controller
         // Pembayaran real
         $payments = Payment::where('user_id', $tenant->id)
             ->latest()
-            ->take(5)
             ->get();
 
 
