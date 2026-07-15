@@ -15,6 +15,7 @@ use App\Http\Controllers\Tenant\PaymentController as TenantPaymentController;
 
 use Illuminate\Support\Facades\Auth;
 
+
 // 1. Rute Publik (Splash Screen / Landing Page)
 Route::get('/', function () {
     return view('welcome');

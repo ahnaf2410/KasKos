@@ -66,4 +66,9 @@ public function selectedRoom()
 {
     return $this->belongsTo(Room::class, 'selected_room_id');
 }
+
+public function tenantRoom()
+{
+    return $this->hasOne(Room::class, 'tenant_id');
+}
 }
