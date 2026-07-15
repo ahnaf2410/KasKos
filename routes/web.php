@@ -12,6 +12,7 @@ use App\Http\Controllers\Tenant\TagihanController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use App\Http\Controllers\Tenant\RoomController as TenantRoomController;
 use App\Http\Controllers\Tenant\PaymentController as TenantPaymentController;
+
 use Illuminate\Support\Facades\Auth;
 
 // 1. Rute Publik (Splash Screen / Landing Page)
@@ -70,9 +71,13 @@ Route::middleware(['auth', 'role:Tenant'])
         Route::get('/dashboard', [TenantDashboardController::class, 'index'])->name('dashboard');
 
         // Manajemen Kamar Tenant (URL: /tenant/kamar-saya)
-        Route::get('/kamar-saya', [TenantRoomController::class, 'index'])->name('rooms.index');
-        Route::get('/kamar-saya/{room}', [TenantRoomController::class, 'show'])->name('rooms.show');
-        Route::post('/kamar-saya/{room}/select', [TenantRoomController::class, 'selectRoom'])->name('rooms.select');
+        Route::get('/denah', [TenantRoomController::class, 'index'])->name('rooms.index');
+        Route::get('/denah/{room}', [TenantRoomController::class, 'show'])->name('rooms.show');
+        Route::post('/denah/{room}/select', [TenantRoomController::class, 'selectRoom'])->name('rooms.select');
+
+        // Route::get('/kamar-saya', [TenantRoomController::class, 'index'])->name('rooms.index');
+        // Route::get('/kamar-saya/{room}', [TenantRoomController::class, 'show'])->name('rooms.show');
+        // Route::post('/kamar-saya/{room}/select', [TenantRoomController::class, 'selectRoom'])->name('rooms.select');
         Route::get('/room-history', [TenantRoomController::class, 'history'])->name('rooms.history');
 
         // Pembayaran Patungan Tenant (URL: /tenant/payments)

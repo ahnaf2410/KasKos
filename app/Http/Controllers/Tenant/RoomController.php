@@ -8,20 +8,37 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RoomHistory;
 
-
-
 class RoomController extends Controller
 {
-    
-    public function index()
-{
-    $rooms = Room::where('status', 'vacant')
-        ->orderBy('floor')
-        ->orderBy('room_number')
-        ->get();
+    public function index(Request $request) // 👈 Ditambahkan Request $request untuk filter lantai
+    {
+        // 1. Hitung Statistik Kamar Kos (Menyesuaikan status 'vacant' dari DB kamu)
+        $totalRooms = Room::count();
+        $availableRooms = Room::where('status', 'vacant')->count();
+        $pendingRooms = Room::whereIn('status', ['pending', 'waiting'])->count();
+        $occupiedRooms = Room::whereIn('status', ['occupied', 'terisi'])->count();
 
-    return view('tenant.rooms.index', compact('rooms'));
-}
+        // 2. Ambil data kamar dengan Eager Load tenant (untuk inisial nama jika terisi)
+        $query = Room::with('tenant');
+
+        // Filter berdasarkan lantai jika tombol lantai di denah diklik
+        if ($request->filled('floor')) {
+            $query->where('floor', $request->floor);
+        }
+
+        $rooms = $query->orderBy('floor')
+            ->orderBy('room_number')
+            ->get();
+
+        // 3. Arahkan ke lokasi view denah baru kamu
+        return view('tenant.denah.index', compact(
+            'rooms',
+            'totalRooms',
+            'availableRooms',
+            'pendingRooms',
+            'occupiedRooms'
+        ));
+    }
 
     public function show(Room $room)
     {
@@ -30,48 +47,37 @@ class RoomController extends Controller
         return view('tenant.rooms.show', compact('room'));
     }
 
-public function history()
-{
-    $histories = RoomHistory::with('room')
-        ->where('user_id', auth()->id())
-        ->latest()
-        ->paginate(10);
+    public function history()
+    {
+        $histories = RoomHistory::with('room')
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->paginate(10);
 
-    return view(
-        'tenant.rooms.history',
-        compact('histories')
-    );
-}
-
-public function selectRoom(Room $room)
-{
-    $user = Auth::user();
-
-    // Sudah memilih kamar
-    if ($user->selected_room_id) {
-        return back()->with(
-            'error',
-            'Anda sudah memilih kamar.'
-        );
+        return view('tenant.rooms.history', compact('histories'));
     }
 
-    // Kamar tidak tersedia
-    if ($room->status !== 'vacant') {
-        return back()->with(
-            'error',
-            'Kamar sudah ditempati.'
-        );
+    public function selectRoom(Room $room)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Sudah memilih kamar
+        if ($user->selected_room_id) {
+            return back()->with('error', 'Anda sudah memilih kamar.');
+        }
+
+        // Kamar tidak tersedia
+        if ($room->status !== 'vacant') {
+            return back()->with('error', 'Kamar sudah ditempati.');
+        }
+
+        $user->update([
+            'selected_room_id' => $room->id,
+        ]);
+
+        return redirect()
+            ->route('tenant.dashboard')
+            ->with('success', 'Kamar berhasil dipilih. Silakan lanjutkan pembayaran.');
     }
-
-    $user->update([
-        'selected_room_id' => $room->id,
-    ]);
-
-    return redirect()
-        ->route('tenant.dashboard')
-        ->with(
-            'success',
-            'Kamar berhasil dipilih. Silakan lanjutkan pembayaran.'
-        );
-}
 }
