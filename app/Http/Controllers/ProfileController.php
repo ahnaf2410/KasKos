@@ -31,31 +31,16 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // 1. Isi data teks yang sudah lolos validasi (name, email, phone, occupation)
-        $user->fill($request->safe()->only(['name', 'email', 'phone', 'occupation']));
+        // Hanya mengambil inputan name dan username yang tervalidasi
+        $user->fill($request->safe()->only(['name', 'username']));
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-        // 2. Proses upload foto profil (Avatar) jika ada file baru
-        if ($request->hasFile('avatar')) {
-            // Hapus avatar lama dari storage jika ada
-            if ($user->avatar) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-            // Simpan yang baru ke folder 'avatars'
-            $user->avatar = $request->file('avatar')->store('avatars', 'public');
-        }
-
-        // 3. Proses ganti password jika kolom password diisi oleh tenant
+        // Update password jika diisi oleh user
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
 
         $user->save();
 
-        // Redirect kembali ke halaman edit profil dengan status sukses
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 

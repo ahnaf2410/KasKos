@@ -13,13 +13,13 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
-
-            // Tambahkan rules baru di bawah ini:
-            'phone' => ['nullable', 'string', 'max:20'],
-            'occupation' => ['nullable', 'string', 'max:100'],
-            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'], // Max 2MB
-            'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()], // Password opsional saat edit profil
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                \Illuminate\Validation\Rule::unique(\App\Models\User::class)->ignore($this->user()->id)
+            ],
+            'password' => ['nullable', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)],
         ];
     }
 }
