@@ -17,7 +17,7 @@
                 </div>
 
                 <div>
-                    <h1 class="font-bold text-lg">SobatKos</h1>
+                    <h1 class="font-bold text-lg">KasKos</h1>
                     <span class="text-xs text-slate-400">Penghuni</span>
                 </div>
             </div>

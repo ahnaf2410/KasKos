@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'profile'])
+@extends('layouts.tenant', ['activePage' => 'profile'])
 
 @section('content')
 <div class="min-h-screen bg-[#F8FAFC] text-slate-800 p-6">

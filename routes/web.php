@@ -11,49 +11,27 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use App\Http\Controllers\Tenant\RoomController as TenantRoomController;
 use App\Http\Controllers\Tenant\PaymentController as TenantPaymentController;
-use App\Models\RoomHistory;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 // 1. Rute Publik (Splash Screen / Landing Page)
 Route::get('/', function () {
     return view('welcome');
 });
 
-// 2. Rute Dashboard Utama (Membutuhkan Login)
+// 2. Rute Dashboard Utama Admin (Membutuhkan Login)
 Route::get('/dashboard', [DashboardController::class, 'admin'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-// 3. Kelompok Rute Auth Umum (Profile & Tenant)
-Route::middleware('auth')->group(function () {
-    // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Tenant
-    Route::get('/tenant/dashboard', [TenantDashboardController::class, 'index'])->name('tenant.dashboard');
-    Route::get('/tenant/kamar-saya', [TenantRoomController::class, 'index'])->name('tenant.rooms.index');
-    Route::get('/tenant/bill-categories', [TenantBillCategoryController::class, 'index'])->name('tenant.bill-categories.index');
-    Route::get('/tenant/bill-categories/{billCategory}', [TenantBillCategoryController::class, 'show'])->name('tenant.bill-categories.show');
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-    // Proses update data profil
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-
-    // Pembayaran Patungan Tenant
-    // Pembayaran Patungan Tenant
-    Route::resource('/tenant/payments', TenantPaymentController::class)
-        ->only([
-            'index',
-            'create',
-            'store',
-            'edit',
-            'update',
-            'destroy',
-            'show',
-        ]);
-});
+// 3. Kelompok Rute Auth Umum (Bisa diakses semua role yang login)
+// Rute di sini akan menghasilkan nama 'profile.edit' sehingga COCOK dengan link di Blade Anda
+Route::middleware(['auth', 'role:Tenant'])
+    ->prefix('tenant')
+    ->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
 
 // 4. Kelompok Rute Admin (Membutuhkan Login & Role Admin)
 Route::middleware(['auth', 'role:Admin'])
@@ -81,37 +59,27 @@ Route::middleware(['auth', 'role:Admin'])
         Route::get('/room-history', ['App\Http\Controllers\Admin\RoomHistoryController', 'index'])->name('room-history.index');
     });
 
-Route::middleware(['auth','role:Tenant'])
+// 5. Kelompok Rute Tenant (Membutuhkan Login & Role Tenant)
+Route::middleware(['auth', 'role:Tenant'])
     ->prefix('tenant')
     ->name('tenant.')
-    ->group(function(){
+    ->group(function() {
 
-        Route::get(
-            '/dashboard',
-            [TenantDashboardController::class,'index']
-        )->name('dashboard');
+        // Dashboard Tenant (URL: /tenant/dashboard)
+        Route::get('/dashboard', [TenantDashboardController::class, 'index'])->name('dashboard');
 
-        Route::get(
-            '/kamar-saya',
-            [TenantRoomController::class,'index']
-        )->name('rooms.index');
+        // Manajemen Kamar Tenant (URL: /tenant/kamar-saya)
+        Route::get('/kamar-saya', [TenantRoomController::class, 'index'])->name('rooms.index');
+        Route::get('/kamar-saya/{room}', [TenantRoomController::class, 'show'])->name('rooms.show');
+        Route::post('/kamar-saya/{room}/select', [TenantRoomController::class, 'selectRoom'])->name('rooms.select');
+        Route::get('/room-history', [TenantRoomController::class, 'history'])->name('rooms.history');
 
-        Route::get(
-            '/kamar-saya/{room}',
-            [TenantRoomController::class,'show']
-        )->name('rooms.show');
-
-        Route::post(
-            '/kamar-saya/{room}/select',
-            [TenantRoomController::class,'selectRoom']
-        )->name('rooms.select');
-
-        Route::get(
-            '/room-history',
-            [TenantRoomController::class,'history']
-        )->name('rooms.history');
-
+        // Pembayaran Patungan Tenant (URL: /tenant/payments)
+        // Note: '/tenant' dihapus dari resource karena sudah otomatis ter-prefix dari group atas
+        Route::resource('payments', TenantPaymentController::class)->only([
+            'index', 'create', 'store', 'edit', 'update', 'destroy', 'show'
+        ]);
     });
 
-// 5. Rute Bawaan Laravel Breeze / Jetstream (Login, Register, Logout, dll)
+// 6. Rute Bawaan Laravel Breeze / Jetstream (Login, Register, Logout, dll)
 require __DIR__.'/auth.php';
