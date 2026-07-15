@@ -217,29 +217,7 @@
 
 <script>
 
-const roomSelect = document.getElementById('room');
-const amountInput = document.getElementById('amount');
-const amountDisplay = document.getElementById('amount_display');
 
-function updateAmount() {
-
-    const option = roomSelect.options[roomSelect.selectedIndex];
-
-    const price = option.dataset.price ?? 0;
-
-    amountInput.value = price;
-
-    amountDisplay.value = new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        minimumFractionDigits: 0
-    }).format(price);
-
-}
-
-updateAmount();
-
-roomSelect.addEventListener('change', updateAmount);
 
 </script>
 
