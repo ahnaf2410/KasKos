@@ -12,8 +12,18 @@ class DashboardController extends Controller
     {
         $tenant = auth()->user()->load('selectedRoom');
 
+        // Kalau belum punya kamar
+    if (!$tenant->tenantRoom) {
+        return redirect()->route('tenant.rooms.index');
+    }
+
+
         // Kamar aktif (kalau nanti sudah dibayar)
-        $room = Room::where('tenant_id', $tenant->id)->first();
+        $room = Room::where('tenant_id', auth()->id())->first();
+
+if (!$room) {
+    return redirect()->route('tenant.rooms.index');
+}
 
         // Dummy tagihan
         $bills = collect([

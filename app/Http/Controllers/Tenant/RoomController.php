@@ -45,33 +45,15 @@ public function history()
 
 public function selectRoom(Room $room)
 {
-    $user = Auth::user();
-
-    // Sudah memilih kamar
-    if ($user->selected_room_id) {
-        return back()->with(
-            'error',
-            'Anda sudah memilih kamar.'
-        );
+    if ($room->status != 'vacant') {
+        return back()->with('error','Kamar sudah terisi');
     }
 
-    // Kamar tidak tersedia
-    if ($room->status !== 'vacant') {
-        return back()->with(
-            'error',
-            'Kamar sudah ditempati.'
-        );
-    }
-
-    $user->update([
-        'selected_room_id' => $room->id,
+    session([
+        'selected_room' => $room->id
     ]);
 
-    return redirect()
-        ->route('tenant.dashboard')
-        ->with(
-            'success',
-            'Kamar berhasil dipilih. Silakan lanjutkan pembayaran.'
-        );
+    return redirect()->route('tenant.payments.create');
 }
+
 }
