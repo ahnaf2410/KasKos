@@ -3,6 +3,12 @@
 @section('content')
 <div class="max-w-7xl mx-auto py-8">
 
+    @if(session('success'))
+        <div class="bg-green-100 text-green-700 p-4 rounded-xl mb-6">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="flex justify-between items-center mb-8">
 
         <div>
@@ -119,13 +125,52 @@
 
                 <td>
 
-                    <a
-                        href="#"
-                        class="bg-red-600 text-white px-3 py-2 rounded-lg">
+                    <div class="flex gap-2 justify-center">
 
-                        Upload
+                        @if(!$payment->payment_slip)
 
-                    </a>
+                            {{-- Belum ada bukti sama sekali --}}
+                            <a
+                                href="{{ route('tenant.payments.create', ['payment' => $payment->id]) }}"
+                                class="bg-red-600 text-white px-3 py-2 rounded-lg text-sm">
+                                Upload
+                            </a>
+
+                        @else
+
+                            {{-- Sudah ada bukti: selalu bisa preview --}}
+                            <a
+                                href="{{ route('tenant.payments.show', $payment) }}"
+                                class="bg-slate-600 text-white px-3 py-2 rounded-lg text-sm">
+                                Preview
+                            </a>
+
+                            @if($payment->status !== 'paid')
+
+                                {{-- Boleh diedit/dihapus selama belum diverifikasi admin --}}
+                                <a
+                                    href="{{ route('tenant.payments.edit', $payment) }}"
+                                    class="bg-yellow-500 text-white px-3 py-2 rounded-lg text-sm">
+                                    Edit
+                                </a>
+
+                                <form
+                                    action="{{ route('tenant.payments.destroy', $payment) }}"
+                                    method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button
+                                        onclick="return confirm('Hapus bukti pembayaran ini?')"
+                                        class="bg-gray-400 text-white px-3 py-2 rounded-lg text-sm">
+                                        Hapus
+                                    </button>
+                                </form>
+
+                            @endif
+
+                        @endif
+
+                    </div>
 
                 </td>
 
