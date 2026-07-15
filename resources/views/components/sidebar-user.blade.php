@@ -69,7 +69,7 @@
             </a>
 
             {{-- Tagihan --}}
-            <a href="#"
+            <a href="{{ route('tenant.tagihan.index') }}"
                 class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
                 {{ $active == 'tagihan'
                     ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20'
