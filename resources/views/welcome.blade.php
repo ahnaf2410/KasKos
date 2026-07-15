@@ -77,7 +77,7 @@ window.location.href="{{ route('login') }}";
 
 @endif
 
-},5000);
+},1000);
 
 </script>
 
