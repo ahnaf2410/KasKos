@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers; // 👈 Hapus '\Admin' karena filenya di luar
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Room;

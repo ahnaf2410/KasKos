@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class PersonalPayment extends Model
 {
     protected $fillable = [
-        'room_id',
         'user_id',
         'title',
         'amount',
@@ -28,10 +27,7 @@ class PersonalPayment extends Model
         ];
     }
 
-    public function room()
-    {
-        return $this->belongsTo(Room::class);
-    }
+
 
     public function user()
     {
@@ -49,12 +45,8 @@ class PersonalPayment extends Model
             return $query;
         }
 
-        return $query->where(function ($q) use ($term) {
-            $q->whereHas('user', function ($user) use ($term) {
-                $user->where('name', 'like', "%{$term}%");
-            })->orWhereHas('room', function ($room) use ($term) {
-                $room->where('room_number', 'like', "%{$term}%");
-            });
+        return $query->whereHas('user', function ($user) use ($term) {
+            $user->where('name', 'like', "%{$term}%");
         });
     }
 }

@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\RoomHistoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DenahController;
@@ -8,9 +8,11 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PersonalPaymentController;
 use App\Http\Controllers\Admin\BillCategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Tenant\TagihanController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use App\Http\Controllers\Tenant\RoomController as TenantRoomController;
 use App\Http\Controllers\Tenant\PaymentController as TenantPaymentController;
+
 use Illuminate\Support\Facades\Auth;
 
 
@@ -57,7 +59,7 @@ Route::middleware(['auth', 'role:Admin'])
         Route::delete('/bill-categories/{id}', [BillCategoryController::class, 'destroy'])->name('bill-categories.destroy');
 
         // Fitur Room History (Dinamis & AJAX)
-        Route::get('/room-history', ['App\Http\Controllers\Admin\RoomHistoryController', 'index'])->name('room-history.index');
+        Route::get('/room-history', [RoomHistoryController::class, 'index'])->name('room-history.index');
     });
 
 // 5. Kelompok Rute Tenant (Membutuhkan Login & Role Tenant)
@@ -70,9 +72,13 @@ Route::middleware(['auth', 'role:Tenant'])
         Route::get('/dashboard', [TenantDashboardController::class, 'index'])->name('dashboard');
 
         // Manajemen Kamar Tenant (URL: /tenant/kamar-saya)
-        Route::get('/kamar-saya', [TenantRoomController::class, 'index'])->name('rooms.index');
-        Route::get('/kamar-saya/{room}', [TenantRoomController::class, 'show'])->name('rooms.show');
-        Route::post('/kamar-saya/{room}/select', [TenantRoomController::class, 'selectRoom'])->name('rooms.select');
+        Route::get('/denah', [TenantRoomController::class, 'index'])->name('rooms.index');
+        Route::get('/denah/{room}', [TenantRoomController::class, 'show'])->name('rooms.show');
+        Route::post('/denah/{room}/select', [TenantRoomController::class, 'selectRoom'])->name('rooms.select');
+
+        // Route::get('/kamar-saya', [TenantRoomController::class, 'index'])->name('rooms.index');
+        // Route::get('/kamar-saya/{room}', [TenantRoomController::class, 'show'])->name('rooms.show');
+        // Route::post('/kamar-saya/{room}/select', [TenantRoomController::class, 'selectRoom'])->name('rooms.select');
         Route::get('/room-history', [TenantRoomController::class, 'history'])->name('rooms.history');
 
         // Pembayaran Patungan Tenant (URL: /tenant/payments)
@@ -80,6 +86,15 @@ Route::middleware(['auth', 'role:Tenant'])
         Route::resource('payments', TenantPaymentController::class)->only([
             'index', 'create', 'store', 'edit', 'update', 'destroy', 'show'
         ]);
+
+         Route::get('/tagihan', [TagihanController::class, 'index'])->name('tagihan.index');
+
+        // 2. Menampilkan detail dari tagihan tertentu (Aksi tombol "Lihat Detail")
+        Route::get('/tagihan/{id}', [TagihanController::class, 'show'])->name('tagihan.show');
+
+        // 3. Memproses aksi pembayaran dari tagihan (Aksi tombol "Bayar Sekarang")
+        Route::post('/tagihan/{id}/bayar', [TagihanController::class, 'bayar'])->name('tagihan.bayar');
+
     });
 
 // 6. Rute Bawaan Laravel Breeze / Jetstream (Login, Register, Logout, dll)

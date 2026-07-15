@@ -10,6 +10,9 @@ use App\Models\Room;
 
 class PaymentController extends Controller
 {
+    /**
+     * Riwayat + status pembayaran patungan milik tenant yang login.
+     */
     public function index()
     {
         $payments = Payment::where('user_id', auth()->id())
