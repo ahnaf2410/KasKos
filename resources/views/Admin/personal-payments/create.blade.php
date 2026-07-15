@@ -23,39 +23,7 @@
         <div class="grid grid-cols-2 gap-6">
 
             {{-- Kamar --}}
-            <div>
 
-                <label class="block font-semibold mb-2">
-                    Kamar
-                </label>
-
-                <select
-                    id="room"
-                    name="room_id"
-                    class="w-full rounded-xl border-gray-300">
-
-                    <option value="">Pilih Kamar</option>
-
-                    @foreach($rooms as $room)
-
-                        <option
-                            value="{{ $room->id }}"
-                            data-price="{{ $room->rental_price }}"
-                            @selected(old('room_id')==$room->id)>
-
-                            {{ $room->room_number }}
-
-                        </option>
-
-                    @endforeach
-
-                </select>
-
-                @error('room_id')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-
-            </div>
 
             {{-- Penghuni --}}
             <div>
@@ -113,15 +81,11 @@
                 </label>
 
                 <input
-                    id="amount_display"
-                    type="text"
-                    readonly
-                    class="w-full rounded-xl bg-gray-100 border-gray-300">
-
-                <input
-                    id="amount"
-                    type="hidden"
-                    name="amount">
+                type="number"
+                name="amount"
+                value="{{ old('amount', isset($payment) ? $payment->amount : '') }}"
+                class="w-full rounded-xl border-gray-300"
+                placeholder="Masukkan nominal pembayaran">
 
                 <p class="text-xs text-gray-500 mt-1">
                     Nominal otomatis mengikuti harga sewa kamar.
@@ -215,28 +179,7 @@
 
 <script>
 
-const roomSelect = document.getElementById('room');
 
-const amountInput = document.getElementById('amount');
-
-const amountDisplay = document.getElementById('amount_display');
-
-roomSelect.addEventListener('change', function(){
-
-    const option = this.options[this.selectedIndex];
-
-    const price = option.dataset.price ?? 0;
-
-    amountInput.value = price;
-
-    amountDisplay.value =
-        new Intl.NumberFormat('id-ID',{
-            style:'currency',
-            currency:'IDR',
-            minimumFractionDigits:0
-        }).format(price);
-
-});
 
 </script>
 
