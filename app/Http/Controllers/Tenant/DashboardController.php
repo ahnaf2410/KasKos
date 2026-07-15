@@ -5,20 +5,17 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\Room;
-use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $tenant = auth()->user();
+        $tenant = auth()->user()->load('selectedRoom');
 
-        // Kamar tenant (real)
-        $room = Room::where('tenant_id', $tenant->id)
-            ->first();
+        // Kamar aktif (kalau nanti sudah dibayar)
+        $room = Room::where('tenant_id', $tenant->id)->first();
 
-
-        // Dummy tagihan sementara
+        // Dummy tagihan
         $bills = collect([
             [
                 'title' => 'Sewa Kamar',
@@ -32,33 +29,20 @@ class DashboardController extends Controller
                 'status' => 'lunas',
                 'due_date' => '25 Juli 2026'
             ],
-            [
-                'title' => 'Internet',
-                'amount' => 100000,
-                'status' => 'belum_lunas',
-                'due_date' => '25 Juli 2026'
-            ],
         ]);
 
-
-        // Total tagihan
         $totalBill = $bills->sum('amount');
 
-
-        // Belum lunas
         $unpaid = $bills
             ->where('status', 'belum_lunas')
             ->sum('amount');
 
-
-        // Pembayaran real
         $payments = Payment::where('user_id', $tenant->id)
             ->latest()
             ->take(5)
             ->get();
 
-
-        return view('dashboard.tenant', compact(
+        return view('tenant.dashboard', compact(
             'tenant',
             'room',
             'bills',

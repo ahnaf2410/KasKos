@@ -15,7 +15,13 @@ use App\Models\Room;
 use App\Models\Bill;
 use App\Models\Payment;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable([
+    'name',
+    'username',
+    'email',
+    'password',
+    'selected_room_id'
+])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -35,7 +41,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function room()
+public function room()
 {
     return $this->hasOne(Room::class, 'tenant_id');
 }
@@ -54,5 +60,10 @@ public function payments()
 {
     return $this->hasMany(PersonalPayment::class);
     return $this->hasMany(Payment::class, 'tenant_id');
+}
+
+public function selectedRoom()
+{
+    return $this->belongsTo(Room::class, 'selected_room_id');
 }
 }
