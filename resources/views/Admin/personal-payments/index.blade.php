@@ -81,48 +81,99 @@
 
 
     {{-- Filter --}}
-    <form class="bg-white rounded-2xl border p-5 mb-8">
+    <form
+        method="GET"
+        action="{{ route('admin.personal-payments.index') }}"
+        class="bg-white rounded-2xl border p-5 mb-8">
 
         <div class="grid grid-cols-4 gap-5">
 
+            {{-- Search --}}
             <input
                 type="text"
                 name="search"
                 value="{{ request('search') }}"
-                placeholder="Cari pembayaran atau nama penghuni..."
+                placeholder="Cari nama penghuni atau jenis pembayaran..."
                 class="rounded-xl border-gray-300">
 
-            <select class="rounded-xl border-gray-300">
+            {{-- Bulan (sementara) --}}
+            <select
+                name="month"
+                class="rounded-xl border-gray-300">
 
-                <option>Semua Bulan</option>
+                <option value="">Semua Bulan</option>
+
+                @for($i = 1; $i <= 12; $i++)
+                    <option
+                        value="{{ $i }}"
+                        {{ request('month') == $i ? 'selected' : '' }}>
+                        {{ DateTime::createFromFormat('!m', $i)->format('F') }}
+                    </option>
+                @endfor
 
             </select>
 
-            <select class="rounded-xl border-gray-300">
+            {{-- Tahun --}}
+            <select
+                name="year"
+                class="rounded-xl border-gray-300">
 
-                <option>2026</option>
+                <option value="">Semua Tahun</option>
+
+                @for($y = now()->year; $y >= 2024; $y--)
+                    <option
+                        value="{{ $y }}"
+                        {{ request('year') == $y ? 'selected' : '' }}>
+                        {{ $y }}
+                    </option>
+                @endfor
 
             </select>
 
+            {{-- Status --}}
             <select
                 name="status"
                 class="rounded-xl border-gray-300">
 
                 <option value="">Semua Status</option>
 
-                <option value="unpaid">
+                <option value="unpaid"
+                    {{ request('status') == 'unpaid' ? 'selected' : '' }}>
                     Belum Bayar
                 </option>
 
-                <option value="pending_verification">
+                <option value="pending_verification"
+                    {{ request('status') == 'pending_verification' ? 'selected' : '' }}>
                     Menunggu Verifikasi
                 </option>
 
-                <option value="paid">
+                <option value="paid"
+                    {{ request('status') == 'paid' ? 'selected' : '' }}>
                     Lunas
                 </option>
 
             </select>
+
+        </div>
+
+        {{-- Tombol --}}
+        <div class="flex justify-end gap-3 mt-5">
+
+            <a
+                href="{{ route('admin.personal-payments.index') }}"
+                class="px-5 py-2 rounded-xl bg-gray-200 hover:bg-gray-300">
+
+                Reset
+
+            </a>
+
+            <button
+                type="submit"
+                class="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white">
+
+                Filter
+
+            </button>
 
         </div>
 
@@ -189,7 +240,7 @@
 
                 <td>
 
-                    {{ $payment->room?->room_number ?? '-' }}
+                    -
 
                 </td>
 
