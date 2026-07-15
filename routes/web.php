@@ -11,8 +11,9 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use App\Http\Controllers\Tenant\RoomController as TenantRoomController;
 use App\Http\Controllers\Tenant\PaymentController as TenantPaymentController;
-use App\Http\Controllers\Tenant\BillCategoryController as TenantBillCategoryController;
-
+use App\Models\RoomHistory;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 // 1. Rute Publik (Splash Screen / Landing Page)
 Route::get('/', function () {
@@ -78,6 +79,38 @@ Route::middleware(['auth', 'role:Admin'])
 
         // Fitur Room History (Dinamis & AJAX)
         Route::get('/room-history', ['App\Http\Controllers\Admin\RoomHistoryController', 'index'])->name('room-history.index');
+    });
+
+Route::middleware(['auth','role:Tenant'])
+    ->prefix('tenant')
+    ->name('tenant.')
+    ->group(function(){
+
+        Route::get(
+            '/dashboard',
+            [TenantDashboardController::class,'index']
+        )->name('dashboard');
+
+        Route::get(
+            '/kamar-saya',
+            [TenantRoomController::class,'index']
+        )->name('rooms.index');
+
+        Route::get(
+            '/kamar-saya/{room}',
+            [TenantRoomController::class,'show']
+        )->name('rooms.show');
+
+        Route::post(
+            '/kamar-saya/{room}/select',
+            [TenantRoomController::class,'selectRoom']
+        )->name('rooms.select');
+
+        Route::get(
+            '/room-history',
+            [TenantRoomController::class,'history']
+        )->name('rooms.history');
+
     });
 
 // 5. Rute Bawaan Laravel Breeze / Jetstream (Login, Register, Logout, dll)

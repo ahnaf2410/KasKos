@@ -1,207 +1,46 @@
-@extends('layouts.app')
+<div class="bg-white rounded-xl shadow-md p-6">
 
+    <div class="flex justify-between items-center">
 
-@section('content')
+        <div>
 
-<div class="container mx-auto px-6 py-8">
+            <h2 class="text-xl font-bold">
+                Kamar {{ $room->room_number }}
+            </h2>
 
+            <p class="text-gray-500">
+                Lantai {{ $room->floor }}
+            </p>
 
-<h1 class="text-3xl font-bold mb-6">
-Kamar Saya
-</h1>
+        </div>
 
+        <span class="px-3 py-1 rounded-full bg-green-100 text-green-700">
 
+            Kosong
 
-@if($currentRoom)
+        </span>
 
+    </div>
 
-<div class="bg-white shadow rounded-lg p-6 mb-6">
+    <div class="mt-4">
 
+        <p class="text-2xl font-bold text-blue-600">
 
-<h2 class="text-xl font-bold mb-4">
-Informasi Kamar
-</h2>
+            Rp {{ number_format($room->rental_price) }}
 
+        </p>
 
-<p>
-Nomor Kamar :
+    </div>
 
-<b>
-{{ $currentRoom->room->room_number }}
-</b>
+    <div class="mt-6">
 
-</p>
+        <a href="{{ route('tenant.rooms.show',$room) }}"
+           class="bg-blue-600 text-white px-4 py-2 rounded-lg">
 
+            Detail
 
-<p>
-Status :
+        </a>
 
-<span class="text-green-600">
-{{ $currentRoom->room->status }}
-</span>
-
-</p>
-
-
-<p>
-Harga :
-
-Rp {{ number_format($currentRoom->room->price) }}
-
-</p>
-
+    </div>
 
 </div>
-
-
-
-
-
-<div class="bg-white shadow rounded-lg p-6 mb-6">
-
-
-<h2 class="text-xl font-bold mb-4">
-Penghuni Satu Kamar
-</h2>
-
-
-
-@foreach($currentRoom->room->users as $tenant)
-
-
-<p>
-{{ $tenant->name }}
-</p>
-
-
-@endforeach
-
-
-
-</div>
-
-
-
-
-
-
-<div class="bg-white shadow rounded-lg p-6">
-
-
-<h2 class="text-xl font-bold mb-4">
-Fasilitas Kamar
-</h2>
-
-
-
-@foreach($currentRoom->room->facilities as $facility)
-
-
-<p>
-- {{ $facility->name }}
-</p>
-
-
-@endforeach
-
-
-
-</div>
-
-
-
-@else
-
-
-<div class="bg-yellow-100 p-5 rounded">
-
-Belum memiliki kamar
-
-</div>
-
-
-@endif
-
-
-
-
-
-<div class="bg-white shadow rounded-lg p-6 mt-6">
-
-
-<h2 class="text-xl font-bold mb-4">
-Riwayat Perpindahan Kamar
-</h2>
-
-
-
-<table class="w-full">
-
-
-<thead>
-
-<tr>
-<th>
-Kamar
-</th>
-
-<th>
-Mulai
-</th>
-
-<th>
-Selesai
-</th>
-
-</tr>
-
-</thead>
-
-
-
-<tbody>
-
-
-@foreach($roomHistories as $history)
-
-
-<tr>
-
-<td>
-{{ $history->room->room_number }}
-</td>
-
-
-<td>
-{{ $history->start_date }}
-</td>
-
-
-<td>
-
-{{ $history->end_date ?? '-' }}
-
-</td>
-
-
-</tr>
-
-
-@endforeach
-
-
-
-</tbody>
-
-
-</table>
-
-
-</div>
-
-
-
-</div>
-
-
-@endsection
