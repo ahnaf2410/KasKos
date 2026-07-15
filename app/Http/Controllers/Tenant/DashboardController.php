@@ -39,7 +39,6 @@ class DashboardController extends Controller
 
         $payments = Payment::where('user_id', $tenant->id)
             ->latest()
-            ->take(5)
             ->get();
 
         return view('tenant.dashboard', compact(

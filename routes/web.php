@@ -35,7 +35,11 @@ Route::middleware('auth')->group(function () {
     // Tenant
     Route::get('/tenant/dashboard', [TenantDashboardController::class, 'index'])->name('tenant.dashboard');
     Route::get('/tenant/kamar-saya', [TenantRoomController::class, 'index'])->name('tenant.rooms.index');
-
+    Route::get('/tenant/bill-categories', [TenantBillCategoryController::class, 'index'])->name('tenant.bill-categories.index');
+    Route::get('/tenant/bill-categories/{billCategory}', [TenantBillCategoryController::class, 'show'])->name('tenant.bill-categories.show');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    // Proses update data profil
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     // Pembayaran Patungan Tenant
     // Pembayaran Patungan Tenant
@@ -74,8 +78,7 @@ Route::middleware(['auth', 'role:Admin'])
         Route::delete('/bill-categories/{id}', [BillCategoryController::class, 'destroy'])->name('bill-categories.destroy');
 
         // Fitur Room History (Dinamis & AJAX)
-        Route::get('/room-history', [RoomHistoryController::class, 'index'])->name('room-history.index');
-        Route::get('/room-history/room/{roomId}/timeline', [RoomHistoryController::class, 'getRoomTimeline']);
+        Route::get('/room-history', ['App\Http\Controllers\Admin\RoomHistoryController', 'index'])->name('room-history.index');
     });
 
 Route::middleware(['auth','role:Tenant'])
