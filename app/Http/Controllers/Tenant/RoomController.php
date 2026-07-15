@@ -53,7 +53,7 @@ class RoomController extends Controller
             ->where('user_id', Auth::id())
             ->latest()
             ->paginate(10);
-
+    }
 public function selectRoom(Room $room)
 {
     if ($room->status != 'vacant') {

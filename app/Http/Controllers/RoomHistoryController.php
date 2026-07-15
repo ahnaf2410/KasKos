@@ -35,7 +35,9 @@ class RoomHistoryController extends Controller
             $query->where('status', $request->status);
         }
 
-        $histories = $query->latest()->paginate(10)->withQueryString();
+        $histories = RoomHistory::with(['room','user'])
+    ->latest()
+    ->paginate(10);
         $rooms = Room::orderBy('room_number')->get();
 
         return view('rooms-history.index', compact('histories', 'rooms'));
