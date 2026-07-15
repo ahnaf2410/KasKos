@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\RoomHistoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DenahController;
@@ -56,7 +56,7 @@ Route::middleware(['auth', 'role:Admin'])
         Route::delete('/bill-categories/{id}', [BillCategoryController::class, 'destroy'])->name('bill-categories.destroy');
 
         // Fitur Room History (Dinamis & AJAX)
-        Route::get('/room-history', ['App\Http\Controllers\Admin\RoomHistoryController', 'index'])->name('room-history.index');
+        Route::get('/room-history', [RoomHistoryController::class, 'index'])->name('room-history.index');
     });
 
 // 5. Kelompok Rute Tenant (Membutuhkan Login & Role Tenant)
