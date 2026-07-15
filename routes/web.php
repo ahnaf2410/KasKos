@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PersonalPaymentController;
 use App\Http\Controllers\Admin\BillCategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Tenant\TagihanController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use App\Http\Controllers\Tenant\RoomController as TenantRoomController;
 use App\Http\Controllers\Tenant\PaymentController as TenantPaymentController;
@@ -79,6 +80,15 @@ Route::middleware(['auth', 'role:Tenant'])
         Route::resource('payments', TenantPaymentController::class)->only([
             'index', 'create', 'store', 'edit', 'update', 'destroy', 'show'
         ]);
+
+         Route::get('/tagihan', [TagihanController::class, 'index'])->name('tagihan.index');
+
+        // 2. Menampilkan detail dari tagihan tertentu (Aksi tombol "Lihat Detail")
+        Route::get('/tagihan/{id}', [TagihanController::class, 'show'])->name('tagihan.show');
+
+        // 3. Memproses aksi pembayaran dari tagihan (Aksi tombol "Bayar Sekarang")
+        Route::post('/tagihan/{id}/bayar', [TagihanController::class, 'bayar'])->name('tagihan.bayar');
+
     });
 
 // 6. Rute Bawaan Laravel Breeze / Jetstream (Login, Register, Logout, dll)
