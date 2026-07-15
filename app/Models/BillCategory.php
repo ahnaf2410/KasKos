@@ -16,4 +16,8 @@ class BillCategory extends Model
         'icon_or_description',
         'default_active'
     ];
+    public function bills()
+{
+    return $this->hasMany(Bill::class);
+}
 }
