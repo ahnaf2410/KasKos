@@ -12,7 +12,6 @@ class Bill extends Model
         return $this->belongsTo(User::class);
     }
 
-
     use HasFactory;
 
     protected $fillable = [
@@ -33,4 +32,9 @@ class Bill extends Model
         'tanggal_verifikasi' => 'date',
         'total_tagihan' => 'float',
     ];
+
+    public function billCategory()
+{
+    return $this->belongsTo(BillCategory::class);
+}
 }

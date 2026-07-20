@@ -11,11 +11,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
+            RoomSeeder::class,
+            RoomHistorySeeder::class,
             BillCategorySeeder::class,
             BillSeeder::class,
             PaymentSeeder::class,
             PersonalPaymentSeeder::class,
-            RoomSeeder::class,
         ]);
     }
 }
+

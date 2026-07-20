@@ -56,10 +56,14 @@ public function bills()
 }
 
 
-public function payments()
+public function personalPayments()
 {
     return $this->hasMany(PersonalPayment::class);
-    return $this->hasMany(Payment::class, 'tenant_id');
+}
+
+public function payments()
+{
+    return $this->hasMany(Payment::class, 'user_id');
 }
 
 public function selectedRoom()

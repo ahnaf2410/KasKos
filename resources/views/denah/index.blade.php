@@ -24,6 +24,10 @@
                     <span class="w-2.5 h-2.5 rounded-full bg-[#801824]"></span>
                     <span class="text-slate-600">Occupied</span>
                 </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full border-2 border-yellow-400 bg-transparent"></span>
+                    <span class="text-slate-600">Kamar Saya</span>
+                </div>
             </div>
         </div>
 
@@ -70,12 +74,12 @@
             </div>
         </div>
 
-        {{-- Filter Navigasi Lantai --}}
+        {{-- Filter Navigasi Lantai (hanya sampai Lantai 3) --}}
         <div class="inline-flex bg-slate-200/70 p-1 rounded-xl text-xs font-bold shadow-inner">
             <a href="{{ url()->current() }}" class="px-4 py-2 rounded-lg transition {{ request('floor') == null ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">Semua Lantai</a>
-            <a href="{{ url()->current() . '?floor=1' }}" class="px-4 py-2 rounded-lg transition {{ request('floor') == '1' ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">Lantai 1</a>
-            <a href="{{ url()->current() . '?floor=2' }}" class="px-4 py-2 rounded-lg transition {{ request('floor') == '2' ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">Lantai 2</a>
-            <a href="{{ url()->current() . '?floor=3' }}" class="px-4 py-2 rounded-lg transition {{ request('floor') == '3' ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">Lantai 3</a>
+            <a href="{{ route('admin.denah.index', ['floor' => 1]) }}" class="px-4 py-2 rounded-lg transition {{ request('floor') == '1' ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">Lantai 1</a>
+            <a href="{{ route('admin.denah.index', ['floor' => 2]) }}" class="px-4 py-2 rounded-lg transition {{ request('floor') == '2' ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">Lantai 2</a>
+            <a href="{{ route('admin.denah.index', ['floor' => 3]) }}" class="px-4 py-2 rounded-lg transition {{ request('floor') == '3' ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">Lantai 3</a>
         </div>
 
         {{-- Grid Kamar --}}
@@ -88,7 +92,10 @@
                 @endphp
 
                 @if(in_array($status, ['occupied', 'terisi']))
-                    <div class="bg-[#801824] text-white rounded-2xl p-4 flex flex-col justify-between items-center text-center h-44 shadow-sm hover:scale-[1.02] transition duration-200">
+                    @php
+                        $isCurrentUser = auth()->id() && $room->tenant_id === auth()->id();
+                    @endphp
+                    <div class="bg-[#801824] text-white rounded-2xl p-4 flex flex-col justify-between items-center text-center h-44 shadow-sm hover:scale-[1.02] transition duration-200 {{ $isCurrentUser ? 'ring-4 ring-yellow-400 ring-offset-2' : '' }}">
                         <span class="text-[10px] font-bold tracking-wider opacity-60 uppercase">Room</span>
                         <h3 class="text-xl font-extrabold -mt-1">{{ $room->room_number }}</h3>
                         <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center font-bold text-sm tracking-wide my-1">{{ $initials }}</div>

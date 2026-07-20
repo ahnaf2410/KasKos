@@ -1,361 +1,145 @@
 @extends('layouts.app', ['activePage' => 'tagihan'])
 
-
 @section('content')
-<div class="max-w-7xl mx-auto py-8">
+<div class="space-y-6">
 
     {{-- Header --}}
-    <div class="flex justify-between items-center mb-8">
-
+    <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-3xl font-bold text-slate-800">
-                Personal Payment
-            </h1>
-
-            <p class="text-gray-500 mt-1">
-                Halaman untuk mengelola pembayaran sewa kamar penghuni.
-            </p>
+            <h1 class="text-2xl font-bold text-slate-900">Pembayaran Sewa</h1>
+            <p class="text-sm text-slate-500 mt-0.5">Kelola pembayaran sewa kamar penghuni.</p>
         </div>
-
-        <a href="{{ route('admin.personal-payments.create') }}"
-            class="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-xl shadow">
-            + Tambah Pembayaran
+        <a href="{{ route('admin.personal-payments.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl shadow-sm transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Tambah Pembayaran
         </a>
-
     </div>
 
-
-    {{-- Statistik --}}
-    <div class="grid grid-cols-4 gap-6 mb-8">
-
-        <div class="bg-white rounded-2xl border p-6 shadow-sm">
-
-            <p class="text-gray-500 font-semibold uppercase text-sm">
-                Total Tagihan
-            </p>
-
-            <h2 class="text-4xl font-bold mt-3">
-                {{ $payments->total() }}
-            </h2>
-
+    {{-- Statistik Baris --}}
+    @php
+        $totalPayments = $payments->total();
+        $lunasCount = $payments->where('status', 'paid')->count();
+        $pendingCount = $payments->where('status', 'pending_verification')->count();
+        $unpaidCount = $payments->where('status', 'unpaid')->count();
+    @endphp
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
+            <p class="text-xs font-semibold text-slate-400">Total</p>
+            <p class="text-xl font-bold text-slate-900 mt-1">{{ $totalPayments }}</p>
         </div>
-
-        <div class="bg-white rounded-2xl border p-6 shadow-sm">
-
-            <p class="text-gray-500 font-semibold uppercase text-sm">
-                Lunas
-            </p>
-
-            <h2 class="text-4xl font-bold text-green-600 mt-3">
-                {{ $payments->where('status','paid')->count() }}
-            </h2>
-
+        <div class="bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
+            <p class="text-xs font-semibold text-slate-400">Lunas</p>
+            <p class="text-xl font-bold text-emerald-600 mt-1">{{ $lunasCount }}</p>
         </div>
-
-        <div class="bg-white rounded-2xl border p-6 shadow-sm">
-
-            <p class="text-gray-500 font-semibold uppercase text-sm">
-                Menunggu
-            </p>
-
-            <h2 class="text-4xl font-bold text-yellow-500 mt-3">
-                {{ $payments->where('status','pending_verification')->count() }}
-            </h2>
-
+        <div class="bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
+            <p class="text-xs font-semibold text-slate-400">Menunggu</p>
+            <p class="text-xl font-bold text-amber-500 mt-1">{{ $pendingCount }}</p>
         </div>
-
-        <div class="bg-white rounded-2xl border p-6 shadow-sm">
-
-            <p class="text-gray-500 font-semibold uppercase text-sm">
-                Belum Bayar
-            </p>
-
-            <h2 class="text-4xl font-bold text-red-600 mt-3">
-                {{ $payments->where('status','unpaid')->count() }}
-            </h2>
-
+        <div class="bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
+            <p class="text-xs font-semibold text-slate-400">Belum Bayar</p>
+            <p class="text-xl font-bold text-rose-600 mt-1">{{ $unpaidCount }}</p>
         </div>
-
     </div>
-
-
 
     {{-- Filter --}}
-    <form
-        method="GET"
-        action="{{ route('admin.personal-payments.index') }}"
-        class="bg-white rounded-2xl border p-5 mb-8">
-
-        <div class="grid grid-cols-4 gap-5">
-
-            {{-- Search --}}
-            <input
-                type="text"
-                name="search"
-                value="{{ request('search') }}"
-                placeholder="Cari nama penghuni atau jenis pembayaran..."
-                class="rounded-xl border-gray-300">
-
-            {{-- Bulan (sementara) --}}
-            <select
-                name="month"
-                class="rounded-xl border-gray-300">
-
+    <form method="GET" action="{{ route('admin.personal-payments.index') }}" class="bg-white rounded-xl border border-slate-100 p-5 shadow-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari penghuni..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-rose-200 focus:border-rose-400">
+            <select name="month" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-rose-200 focus:border-rose-400">
                 <option value="">Semua Bulan</option>
-
                 @for($i = 1; $i <= 12; $i++)
-                    <option
-                        value="{{ $i }}"
-                        {{ request('month') == $i ? 'selected' : '' }}>
-                        {{ DateTime::createFromFormat('!m', $i)->format('F') }}
-                    </option>
+                    <option value="{{ $i }}" {{ request('month') == $i ? 'selected' : '' }}>{{ DateTime::createFromFormat('!m', $i)->format('F') }}</option>
                 @endfor
-
             </select>
-
-            {{-- Tahun --}}
-            <select
-                name="year"
-                class="rounded-xl border-gray-300">
-
+            <select name="year" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-rose-200 focus:border-rose-400">
                 <option value="">Semua Tahun</option>
-
                 @for($y = now()->year; $y >= 2024; $y--)
-                    <option
-                        value="{{ $y }}"
-                        {{ request('year') == $y ? 'selected' : '' }}>
-                        {{ $y }}
-                    </option>
+                    <option value="{{ $y }}" {{ request('year') == $y ? 'selected' : '' }}>{{ $y }}</option>
                 @endfor
-
             </select>
-
-            {{-- Status --}}
-            <select
-                name="status"
-                class="rounded-xl border-gray-300">
-
+            <select name="status" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-rose-200 focus:border-rose-400">
                 <option value="">Semua Status</option>
-
-                <option value="unpaid"
-                    {{ request('status') == 'unpaid' ? 'selected' : '' }}>
-                    Belum Bayar
-                </option>
-
-                <option value="pending_verification"
-                    {{ request('status') == 'pending_verification' ? 'selected' : '' }}>
-                    Menunggu Verifikasi
-                </option>
-
-                <option value="paid"
-                    {{ request('status') == 'paid' ? 'selected' : '' }}>
-                    Lunas
-                </option>
-
+                <option value="unpaid" {{ request('status') == 'unpaid' ? 'selected' : '' }}>Belum Bayar</option>
+                <option value="pending_verification" {{ request('status') == 'pending_verification' ? 'selected' : '' }}>Menunggu</option>
+                <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>Lunas</option>
             </select>
-
         </div>
-
-        {{-- Tombol --}}
-        <div class="flex justify-end gap-3 mt-5">
-
-            <a
-                href="{{ route('admin.personal-payments.index') }}"
-                class="px-5 py-2 rounded-xl bg-gray-200 hover:bg-gray-300">
-
-                Reset
-
-            </a>
-
-            <button
-                type="submit"
-                class="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white">
-
-                Filter
-
-            </button>
-
+        <div class="flex justify-end gap-2 mt-4">
+            <a href="{{ route('admin.personal-payments.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-medium rounded-lg transition">Reset</a>
+            <button type="submit" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-lg transition">Filter</button>
         </div>
-
     </form>
 
-
-
     {{-- Table --}}
-    <div class="bg-white rounded-3xl border overflow-hidden shadow-sm">
-
-        <table class="w-full">
-
-            <thead class="bg-slate-100 text-slate-700">
-
-            <tr>
-
-                <th class="p-5 text-left">Nama Penghuni</th>
-
-                <th>No. Kamar</th>
-
-                <th>Jenis</th>
-
-                <th>Nominal</th>
-
-                <th>Jatuh Tempo</th>
-
-                <th>Status</th>
-
-                <th width="160">Aksi</th>
-
-            </tr>
-
-            </thead>
-
-            <tbody>
-
-            @forelse($payments as $payment)
-
-            <tr class="border-t hover:bg-gray-50">
-
-                <td class="p-5">
-
-                    <div class="flex items-center gap-3">
-
-                        <div class="w-11 h-11 rounded-full bg-red-100 flex items-center justify-center font-bold text-red-700">
-
-                            {{ strtoupper(substr($payment->user?->name ?? '--',0,2)) }}
-
-                        </div>
-
-                        <div>
-
-                            <div class="font-semibold">
-
-                                {{ $payment->user?->name ?? '-' }}
-
+    <div class="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="bg-slate-50 text-left">
+                        <th class="px-5 py-3.5 font-semibold text-slate-500 text-xs uppercase">Penghuni</th>
+                        <th class="px-5 py-3.5 font-semibold text-slate-500 text-xs uppercase">No. Kamar</th>
+                        <th class="px-5 py-3.5 font-semibold text-slate-500 text-xs uppercase">Tagihan</th>
+                        <th class="px-5 py-3.5 font-semibold text-slate-500 text-xs uppercase">Nominal</th>
+                        <th class="px-5 py-3.5 font-semibold text-slate-500 text-xs uppercase">Jatuh Tempo</th>
+                        <th class="px-5 py-3.5 font-semibold text-slate-500 text-xs uppercase">Status</th>
+                        <th class="px-5 py-3.5 font-semibold text-slate-500 text-xs uppercase">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @forelse($payments as $payment)
+                    <tr class="hover:bg-slate-50/50">
+                        <td class="px-5 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-full bg-rose-100 flex items-center justify-center text-xs font-bold text-rose-700">
+                                    {{ strtoupper(substr($payment->user?->name ?? '--', 0, 2)) }}
+                                </div>
+                                <span class="font-medium text-slate-800">{{ $payment->user?->name ?? '-' }}</span>
                             </div>
-
-                        </div>
-
-                    </div>
-
-                </td>
-
-                <td>
-
-                    -
-
-                </td>
-
-                <td>
-
-                    <span class="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full">
-
-                        {{ $payment->title ?? 'Sewa Bulanan' }}
-
-                    </span>
-
-                </td>
-
-                <td class="font-semibold">
-
-                    Rp {{ number_format($payment->amount,0,',','.') }}
-
-                </td>
-
-                <td>
-
-                    {{ $payment->due_date?->format('d M Y') ?? '-' }}
-
-                </td>
-
-                <td>
-
-                    @if($payment->status=='paid')
-
-                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs">
-
-                            Lunas
-
-                        </span>
-
-                    @elseif($payment->status=='pending_verification')
-
-                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs">
-
-                            Menunggu
-
-                        </span>
-
-                    @else
-
-                        <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs">
-
-                            Belum Bayar
-
-                        </span>
-
-                    @endif
-
-                </td>
-
-                <td>
-
-                    <div class="flex gap-3 justify-center">
-
-                        <a
-                            href="{{ route('admin.personal-payments.edit',$payment) }}"
-                            class="text-blue-600 hover:text-blue-800">
-
-                            ✏️
-
-                        </a>
-
-                        <form
-                            action="{{ route('admin.personal-payments.destroy',$payment) }}"
-                            method="POST">
-
-                            @csrf
-                            @method('DELETE')
-
-                            <button
-                                onclick="return confirm('Hapus pembayaran?')"
-                                class="text-red-600 hover:text-red-800">
-
-                                🗑️
-
-                            </button>
-
-                        </form>
-
-                    </div>
-
-                </td>
-
-            </tr>
-
-            @empty
-
-            <tr>
-
-                <td colspan="7" class="text-center py-10 text-gray-500">
-
-                    Belum ada pembayaran.
-
-                </td>
-
-            </tr>
-
-            @endforelse
-
-            </tbody>
-
-        </table>
-
+                        </td>
+                        <td class="px-5 py-4 text-slate-600">{{ $payment->user?->room?->room_number ?? '-' }}</td>
+                        <td class="px-5 py-4">
+                            <span class="bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full">{{ $payment->title ?? 'Sewa' }}</span>
+                        </td>
+                        <td class="px-5 py-4 font-semibold text-slate-800">Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
+                        <td class="px-5 py-4 text-slate-500 text-xs">{{ $payment->due_date?->format('d M Y') ?? '-' }}</td>
+                        <td class="px-5 py-4">
+                            @if($payment->status == 'paid')
+                                <span class="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-medium">Lunas</span>
+                            @elseif($payment->status == 'pending_verification')
+                                <span class="bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full text-xs font-medium">Menunggu</span>
+                            @else
+                                <span class="bg-red-50 text-red-700 px-2.5 py-1 rounded-full text-xs font-medium">Belum Bayar</span>
+                            @endif
+                        </td>
+                        <td class="px-5 py-4">
+                            <div class="flex items-center gap-2">
+                                <a href="{{ route('admin.personal-payments.edit', $payment) }}" class="p-1.5 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                </a>
+                                <form action="{{ route('admin.personal-payments.destroy', $payment) }}" method="POST" onsubmit="return confirm('Hapus pembayaran ini?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="px-5 py-10 text-center text-slate-400">Belum ada data pembayaran.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="mt-8">
-
+    {{-- Pagination --}}
+    <div class="mt-4">
         {{ $payments->links() }}
-
     </div>
 
 </div>
 @endsection
+

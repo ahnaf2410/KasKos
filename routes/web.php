@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PersonalPaymentController;
 use App\Http\Controllers\Admin\BillCategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MoveRoomRequestController;
 use App\Http\Controllers\Tenant\TagihanController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use App\Http\Controllers\Tenant\RoomController as TenantRoomController;
@@ -59,6 +60,11 @@ Route::middleware(['auth', 'role:Admin'])
 
         // Fitur Room History (Dinamis & AJAX)
         Route::get('/room-history', [RoomHistoryController::class, 'index'])->name('room-history.index');
+
+        // Permintaan Pindah Kamar
+        Route::get('/move-room-requests', [MoveRoomRequestController::class, 'index'])->name('move-room-requests.index');
+        Route::post('/move-room-requests/{move_room_request}/approve', [MoveRoomRequestController::class, 'approve'])->name('move-room-requests.approve');
+        Route::post('/move-room-requests/{move_room_request}/reject', [MoveRoomRequestController::class, 'reject'])->name('move-room-requests.reject');
     });
 
 // 5. Kelompok Rute Tenant (Membutuhkan Login & Role Tenant)
@@ -74,6 +80,7 @@ Route::middleware(['auth', 'role:Tenant'])
         Route::get('/denah', [TenantRoomController::class, 'index'])->name('rooms.index');
         Route::get('/denah/{room}', [TenantRoomController::class, 'show'])->name('rooms.show');
         Route::post('/denah/{room}/select', [TenantRoomController::class, 'selectRoom'])->name('rooms.select');
+        Route::post('/denah/{room}/request-move', [TenantRoomController::class, 'requestMove'])->name('rooms.request-move');
 
         // Route::get('/kamar-saya', [TenantRoomController::class, 'index'])->name('rooms.index');
         // Route::get('/kamar-saya/{room}', [TenantRoomController::class, 'show'])->name('rooms.show');

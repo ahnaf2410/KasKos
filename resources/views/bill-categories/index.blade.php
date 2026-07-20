@@ -117,6 +117,8 @@
                 <thead>
                     <tr class="border-b border-slate-100 bg-white">
                         <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 tracking-wider uppercase">KATEGORI</th>
+                        <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 tracking-wider uppercase">HARGA LAMA</th>
+                        <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 tracking-wider uppercase">HARGA BARU</th>
                         <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 tracking-wider uppercase">ADMIN</th>
                         <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 tracking-wider uppercase">WAKTU</th>
                         <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 tracking-wider uppercase">AKSI</th>
@@ -125,9 +127,9 @@
                 <tbody class="divide-y divide-slate-50 text-sm">
                     @forelse($logs as $log)
                         <tr class="hover:bg-slate-50/50 transition">
-                            <td class="px-6 py-4 font-bold text-slate-800">
-                                {{ $log->category_name == 'Electricity' ? 'Listrik' : ($log->category_name == 'Wifi' ? 'Internet & WiFi' : ($log->category_name == 'Water' ? 'Air Bersih' : $log->category_name)) }}
-                            </td>
+                            <td class="px-6 py-4 font-bold text-slate-800">{{ $log->category_name }}</td>
+                            <td class="px-6 py-4 text-slate-600 text-xs">{{ $log->old_price ? 'Rp ' . number_format($log->old_price, 0, ',', '.') : '-' }}</td>
+                            <td class="px-6 py-4 text-slate-800 text-xs font-semibold">{{ $log->new_price ? 'Rp ' . number_format($log->new_price, 0, ',', '.') : '-' }}</td>
                             <td class="px-6 py-4 text-slate-600">{{ $log->admin_name }}</td>
                             <td class="px-6 py-4 text-slate-400 text-xs">{{ $log->created_at->diffForHumans() }}</td>
                             <td class="px-6 py-4">
@@ -138,7 +140,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-8 text-center text-slate-400 text-xs italic">
+                            <td colspan="6" class="px-6 py-8 text-center text-slate-400 text-xs italic">
                                 Belum ada riwayat aktivitas perubahan data.
                             </td>
                         </tr>

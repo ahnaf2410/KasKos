@@ -22,9 +22,6 @@
 
         <div class="grid grid-cols-2 gap-6">
 
-            {{-- Kamar --}}
-
-
             {{-- Penghuni --}}
             <div>
 
@@ -34,17 +31,20 @@
 
                 <select
                     name="user_id"
-                    class="w-full rounded-xl border-gray-300">
+                    id="user_id"
+                    class="w-full rounded-xl border-gray-300"
+                    onchange="autoFillAmount(this)">
 
-                    <option value="">Pilih Penghuni</option>
+                    <option value="" data-price="0">Pilih Penghuni</option>
 
                     @foreach($users as $user)
 
                         <option
                             value="{{ $user->id }}"
+                            data-price="{{ $user->room?->rental_price ?? 0 }}"
                             @selected(old('user_id')==$user->id)>
 
-                            {{ $user->name }}
+                            {{ $user->name }} {{ $user->room ? '(Kamar '.$user->room->room_number.')' : '(Belum punya kamar)' }}
 
                         </option>
 
@@ -81,14 +81,16 @@
                 </label>
 
                 <input
+                id="amount"
                 type="number"
                 name="amount"
                 value="{{ old('amount', isset($payment) ? $payment->amount : '') }}"
                 class="w-full rounded-xl border-gray-300"
-                placeholder="Masukkan nominal pembayaran">
+                placeholder="Nominal otomatis terisi"
+                readonly>
 
                 <p class="text-xs text-gray-500 mt-1">
-                    Nominal otomatis mengikuti harga sewa kamar.
+                    Nominal otomatis mengikuti harga sewa kamar penghuni.
                 </p>
 
             </div>
@@ -178,9 +180,19 @@
 </div>
 
 <script>
+function autoFillAmount(select) {
+    const selected = select.options[select.selectedIndex];
+    const price = selected ? parseFloat(selected.dataset.price) || 0 : 0;
+    document.getElementById('amount').value = price;
+}
 
-
-
+// Auto-fill on page load if old value exists
+document.addEventListener('DOMContentLoaded', function() {
+    const select = document.getElementById('user_id');
+    if (select.value) {
+        autoFillAmount(select);
+    }
+});
 </script>
 
 @endsection

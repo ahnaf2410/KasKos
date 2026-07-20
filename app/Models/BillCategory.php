@@ -13,7 +13,7 @@ class BillCategory extends Model
 
     protected $fillable = [
         'category_name',
-        'icon_or_description',
+        'price',
         'default_active'
     ];
     public function bills()

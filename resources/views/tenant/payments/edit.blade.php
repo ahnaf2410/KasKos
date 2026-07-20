@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'pembayaran'])
+@extends('layouts.tenant', ['activePage' => 'pembayaran'])
 
 @section('content')
 <div class="max-w-md mx-auto py-8">

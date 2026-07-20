@@ -75,12 +75,6 @@
                            class="rounded border-slate-300 text-[#E84855] focus:ring-[#E84855]">
                     <span class="ms-2 text-sm text-slate-600">{{ __('Ingat Saya') }}</span>
                 </label>
-
-                @if (Route::has('password.request'))
-                    <a class="text-sm text-indigo-600 hover:text-indigo-800" href="{{ route('password.request') }}">
-                        {{ __('Lupa Password?') }}
-                    </a>
-                @endif
             </div>
 
             <!-- Login Button -->

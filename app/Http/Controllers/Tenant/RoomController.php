@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Room;
+use App\Models\MoveRoomRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RoomHistory;
@@ -79,5 +80,48 @@ class RoomController extends Controller
         return redirect()
             ->route('tenant.dashboard')
             ->with('success', 'Kamar berhasil dipilih. Silakan lanjutkan pembayaran.');
+    }
+
+    public function requestMove(Request $request, Room $room)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Cek apakah user punya kamar saat ini
+        $currentRoom = Room::where('tenant_id', $user->id)->first();
+        if (!$currentRoom) {
+            return back()->with('error', 'Anda belum memiliki kamar untuk dipindahkan.');
+        }
+
+        if ($currentRoom->id === $room->id) {
+            return back()->with('error', 'Anda sudah berada di kamar ini.');
+        }
+
+        // Cek apakah kamar tujuan tersedia
+        if ($room->status !== 'vacant') {
+            return back()->with('error', 'Kamar tujuan tidak tersedia.');
+        }
+
+        // Cek apakah sudah ada request pending untuk user ini
+        $pendingRequest = MoveRoomRequest::where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->first();
+
+        if ($pendingRequest) {
+            return back()->with('error', 'Anda masih memiliki permintaan pindah yang belum diproses.');
+        }
+
+        // Buat request pindah
+        MoveRoomRequest::create([
+            'user_id' => $user->id,
+            'from_room_id' => $currentRoom->id,
+            'to_room_id' => $room->id,
+            'status' => 'pending',
+            'notes' => $request->notes,
+        ]);
+
+        return redirect()
+            ->route('tenant.rooms.index')
+            ->with('success', 'Permintaan pindah kamar ke ' . $room->room_number . ' telah dikirim ke admin. Silakan tunggu verifikasi.');
     }
 }

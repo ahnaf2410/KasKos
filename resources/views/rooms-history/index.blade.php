@@ -75,12 +75,13 @@
         <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-[0_2px_12px_rgba(0,0,0,0.01)]">
             <table class="w-full text-sm text-left">
                 <thead class="bg-slate-50 text-slate-500 border-b border-slate-200 uppercase text-xs tracking-wide">
-                    <tr>
-                        <th class="px-5 py-3.5 font-bold">Nama Penghuni</th>
-                        <th class="px-5 py-3.5 font-bold">Nomor Kamar</th>
-                        <th class="px-5 py-3.5 font-bold">Status Sewa</th>
-                        <th class="px-5 py-3.5 font-bold">Periode Kontrak</th>
-                    </tr>
+                <tr>
+                    <th class="px-5 py-3.5 font-bold">Nama Penghuni</th>
+                    <th class="px-5 py-3.5 font-bold">Nomor Kamar</th>
+                    <th class="px-5 py-3.5 font-bold">Tanggal Masuk</th>
+                    <th class="px-5 py-3.5 font-bold">Tanggal Keluar</th>
+                    <th class="px-5 py-3.5 font-bold">Status Sewa</th>
+                </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse ($histories as $history)
@@ -96,6 +97,12 @@
                             <td class="px-5 py-4 text-slate-600 font-semibold">
                                 {{ $history->room->room_number ?? '-' }}
                             </td>
+                            <td class="px-5 py-4 text-slate-600">
+                                {{ $history->start_date ? \Carbon\Carbon::parse($history->start_date)->format('d M Y') : '-' }}
+                            </td>
+                            <td class="px-5 py-4 text-slate-600">
+                                {{ $history->end_date ? \Carbon\Carbon::parse($history->end_date)->format('d M Y') : '-' }}
+                            </td>
                             <td class="px-5 py-4">
                                 @php
                                     $statusStyle = match(strtolower($history->status)) {
@@ -108,17 +115,7 @@
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border {{ $statusStyle }}">
                                     {{ ucfirst($history->status) }}
                                 </span>
-                            </td>
-                            <td class="px-5 py-4 text-slate-600 text-xs">
-                                <span class="font-semibold text-slate-700">
-                                    {{ $history->created_at->format('d M Y H:i') }}
-                                </span>
-                                @if(strtolower($history->status) == 'active')
-                                    <span class="text-emerald-600 font-semibold"> (Mulai Menempati) </span>
-                                @else
-                                    <span class="text-rose-600 font-semibold"> (Keluar/Pindah) </span>
-                                @endif
-                            </td>
+                            </td
                         </tr>
                     @empty
                         <tr>

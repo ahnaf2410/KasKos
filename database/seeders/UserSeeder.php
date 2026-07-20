@@ -10,53 +10,39 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Admin
-        $admin = User::create([
+        // Admin (2 users)
+        $admin1 = User::create([
             'name' => 'Admin KasKos',
             'username' => 'admin',
             'password' => Hash::make('password'),
         ]);
+        $admin1->assignRole('Admin');
 
-        $admin->assignRole('Admin');
-
-        // Admin 2
         $admin2 = User::create([
             'name' => 'Ahnaf Admin',
             'username' => 'admin_kaskos',
             'password' => Hash::make('password123'),
         ]);
+        $admin2->assignRole('Admin');
 
-        $admin->assignRole('Admin');
+        // 25 Tenant names - sesuai jumlah kamar terisi (25)
+        $tenantNames = [
+            'Ahmad', 'Budi', 'Citra', 'Dewi', 'Eko',
+            'Fitri', 'Gilang', 'Hana', 'Irfan', 'Joko',
+            'Kiki', 'Lina', 'Mega', 'Nanda', 'Okta',
+            'Putri', 'Qori', 'Rudi', 'Sari', 'Tono',
+            'Umi', 'Vino', 'Wati', 'Xavier', 'Yuli',
+        ];
 
-
-        // Tenant 1
-        $tenant1 = User::create([
-            'name' => 'Ahmad Tenant',
-            'username' => 'ahmad',
-            'password' => Hash::make('password'),
-        ]);
-
-        $tenant1->assignRole('Tenant');
-
-
-        // Tenant 2
-        $tenant2 = User::create([
-            'name' => 'Budi Tenant',
-            'username' => 'budi',
-            'password' => Hash::make('password'),
-        ]);
-
-        $tenant2->assignRole('Tenant');
-
-
-        // Tenant 3
-        $tenant3 = User::create([
-            'name' => 'Budi Tenant',
-            'username' => 'budi_tenant',
-            'password' => Hash::make('tenant123'),
-        ]);
-
-        $tenant3->assignRole('Tenant');
-
+        foreach ($tenantNames as $i => $name) {
+            $username = strtolower(str_replace(' ', '_', $name)) . '_tenant';
+            $tenant = User::create([
+                'name' => $name,
+                'username' => $username,
+                'password' => Hash::make('password'),
+            ]);
+            $tenant->assignRole('Tenant');
+        }
     }
 }
+

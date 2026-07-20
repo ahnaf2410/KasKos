@@ -11,7 +11,7 @@ class PersonalPaymentController extends Controller
 {
     public function index(Request $request)
     {
-        $payments = PersonalPayment::with(['user', 'verifier'])
+        $payments = PersonalPayment::with(['user.room', 'verifier'])
             ->search($request->search)
 
             ->when($request->status, function ($q) use ($request) {
@@ -36,7 +36,7 @@ class PersonalPaymentController extends Controller
     public function create()
     {
         return view('admin.personal-payments.create', [
-            'users' => User::orderBy('name')->get(),
+            'users' => User::with('room')->orderBy('name')->get(),
         ]);
     }
 
@@ -72,7 +72,8 @@ class PersonalPaymentController extends Controller
     {
         return view('admin.personal-payments.edit', [
             'payment' => $personalPayment,
-            'users' => User::orderBy('name')->get(),
+            'users' => User::with('room')->orderBy('name')->get(),
+            'rooms' => \App\Models\Room::orderBy('room_number')->get(),
         ]);
     }
 
