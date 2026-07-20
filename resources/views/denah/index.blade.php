@@ -71,12 +71,32 @@
         </div>
 
         {{-- Filter Navigasi Lantai --}}
-        <div class="inline-flex bg-slate-200/70 p-1 rounded-xl text-xs font-bold shadow-inner">
-            <a href="{{ url()->current() }}" class="px-4 py-2 rounded-lg transition {{ request('floor') == null ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">Semua Lantai</a>
-            <a href="{{ url()->current() . '?floor=1' }}" class="px-4 py-2 rounded-lg transition {{ request('floor') == '1' ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">Lantai 1</a>
-            <a href="{{ url()->current() . '?floor=2' }}" class="px-4 py-2 rounded-lg transition {{ request('floor') == '2' ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">Lantai 2</a>
-            <a href="{{ url()->current() . '?floor=3' }}" class="px-4 py-2 rounded-lg transition {{ request('floor') == '3' ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">Lantai 3</a>
-        </div>
+        {{-- Filter Navigasi Lantai --}}
+<div class="inline-flex bg-slate-200/70 p-1 rounded-xl text-xs font-bold shadow-inner">
+    {{-- Menghapus parameter floor dari URL untuk menampilkan semua --}}
+    <a href="{{ request()->fullUrlWithQuery(['floor' => null]) }}" 
+       class="px-4 py-2 rounded-lg transition {{ request('floor') == null ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">
+       Semua Lantai
+    </a>
+    
+    {{-- Menambahkan/mengubah parameter floor menjadi 1 --}}
+    <a href="{{ request()->fullUrlWithQuery(['floor' => '1']) }}" 
+       class="px-4 py-2 rounded-lg transition {{ request('floor') == '1' ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">
+       Lantai 1
+    </a>
+    
+    {{-- Menambahkan/mengubah parameter floor menjadi 2 --}}
+    <a href="{{ request()->fullUrlWithQuery(['floor' => '2']) }}" 
+       class="px-4 py-2 rounded-lg transition {{ request('floor') == '2' ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">
+       Lantai 2
+    </a>
+    
+    {{-- Menambahkan/mengubah parameter floor menjadi 3 --}}
+    <a href="{{ request()->fullUrlWithQuery(['floor' => '3']) }}" 
+       class="px-4 py-2 rounded-lg transition {{ request('floor') == '3' ? 'bg-white text-[#801824] shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">
+       Lantai 3
+    </a>
+</div>
 
         {{-- Grid Kamar --}}
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -108,7 +128,7 @@
                         <span class="absolute top-3 right-3 w-2 h-2 rounded-full bg-[#00695C]"></span>
                         <span class="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Room</span>
                         <h3 class="text-xl font-extrabold text-slate-900 -mt-1">{{ $room->room_number }}</h3>
-                        <a href="#" class="w-full py-2 bg-[#00695C] hover:bg-[#004D40] text-white font-bold text-xs rounded-xl transition shadow-sm tracking-wide">KLAIM</a>
+                        <a href="#" class="w-full py-2 bg-[#00695C] hover:bg-[#004D40] text-white font-bold text-xs rounded-xl transition shadow-sm tracking-wide">AVAILABLE</a>
                         <span class="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Rp {{ number_format($room->rental_price ?? 0, 0, ',', '.') }}</span>
                     </div>
                 @endif
