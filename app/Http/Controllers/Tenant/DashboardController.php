@@ -9,17 +9,13 @@ use App\Models\Room;
 class DashboardController extends Controller
 {
     public function index()
-{
-    $tenant = auth()->user();
+    {
+        $tenant = auth()->user()->load('selectedRoom');
 
-    $room = Room::where('tenant_id', auth()->id())->first();
+        // Kamar aktif (kalau nanti sudah dibayar)
+        $room = Room::where('tenant_id', $tenant->id)->first();
 
-    $bills = collect();
-    $totalBill = 0;
-    $unpaid = 0;
-    $payments = collect();
-
-    if ($room) {
+        // Dummy tagihan
         $bills = collect([
             [
                 'title' => 'Sewa Kamar',
@@ -36,20 +32,22 @@ class DashboardController extends Controller
         ]);
 
         $totalBill = $bills->sum('amount');
-        $unpaid = $bills->where('status', 'belum_lunas')->sum('amount');
+
+        $unpaid = $bills
+            ->where('status', 'belum_lunas')
+            ->sum('amount');
 
         $payments = Payment::where('user_id', $tenant->id)
             ->latest()
             ->get();
-    }
 
-    return view('tenant.dashboard', compact(
-        'tenant',
-        'room',
-        'bills',
-        'totalBill',
-        'unpaid',
-        'payments'
-    ));
-}
+        return view('tenant.dashboard', compact(
+            'tenant',
+            'room',
+            'bills',
+            'totalBill',
+            'unpaid',
+            'payments'
+        ));
+    }
 }

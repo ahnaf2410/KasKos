@@ -31,7 +31,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
 {
     $request->validate([
-        'name' => ['required', 'string', 'max:255'],
+        'name' => ['required', 'string', 'max::255'],
         'username' => ['required', 'string', 'max:255', 'unique:'.User::class], // Validasi username
         'password' => ['required', 'confirmed', Rules\Password::defaults()],
     ]);
@@ -41,11 +41,10 @@ class RegisteredUserController extends Controller
         'username' => $request->username,
         'password' => Hash::make($request->password),
     ]);
-$user->assignRole('Tenant');
-event(new Registered($user));
 
-return redirect()
-    ->route('login')
-    ->with('success', 'Registrasi berhasil. Silakan login.');
+    event(new Registered($user));
+    Auth::login($user);
+
+    return redirect(route('dashboard', absolute: false));
 }
 }

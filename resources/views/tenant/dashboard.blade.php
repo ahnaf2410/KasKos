@@ -36,11 +36,11 @@
                 $unpaid > 0 ? 'bg-red-600' : 'bg-emerald-600'
             ],
             [
-    'Kamar',
-    $room?->room_number ?? '-',
-    '🏠',
-    'bg-blue-600'
-],
+                'Kamar',
+                $room->name ?? '-',
+                '🏠',
+                'bg-blue-600'
+            ],
             [
                 'Pembayaran',
                 $payments->count(),
@@ -207,55 +207,30 @@
 
         <!-- Side -->
 
-        <div class="bg-white rounded-2xl shadow p-5">
+        <div class="space-y-6">
 
-    <h3 class="font-bold mb-4">
-        Informasi Kamar
-    </h3>
 
-    @if($room)
+            <!-- Kamar -->
 
-        <div class="space-y-3">
+            <div class="bg-white rounded-2xl shadow p-5">
 
-            <div>
-                <p class="text-gray-500 text-sm">Nomor Kamar</p>
-                <p class="font-bold text-xl">
-                    {{ $room->room_number }}
+
+                <h3 class="font-bold mb-4">
+                    Informasi Kamar
+                </h3>
+
+
+                <p class="text-gray-500">
+                    Nomor Kamar
                 </p>
-            </div>
 
-            <div>
-                <p class="text-gray-500 text-sm">Lantai</p>
-                <p>{{ $room->floor }}</p>
-            </div>
 
-            <div>
-                <p class="text-gray-500 text-sm">Harga Sewa</p>
-                <p>
-                    Rp {{ number_format($room->rental_price,0,',','.') }}
+                <p class="text-3xl font-bold">
+                    {{ $room->name ?? '-' }}
                 </p>
-            </div>
 
-            <div>
-                <p class="text-gray-500 text-sm">Status</p>
-
-                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
-                    {{ ucfirst($room->status) }}
-                </span>
 
             </div>
-
-        </div>
-
-    @else
-
-        <p class="text-gray-500">
-            Belum memiliki kamar.
-        </p>
-
-    @endif
-
-</div>
 
 
 

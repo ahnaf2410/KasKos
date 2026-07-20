@@ -31,7 +31,7 @@ class RoomController extends Controller
             ->get();
 
         // 3. Arahkan ke lokasi view denah baru kamu
-        return view('tenant.rooms.index', compact(
+        return view('tenant.denah.index', compact(
             'rooms',
             'totalRooms',
             'availableRooms',
@@ -53,18 +53,31 @@ class RoomController extends Controller
             ->where('user_id', Auth::id())
             ->latest()
             ->paginate(10);
-    }
-public function selectRoom(Room $room)
-{
-    if ($room->status != 'vacant') {
-        return back()->with('error','Kamar sudah terisi');
+
+        return view('tenant.rooms.history', compact('histories'));
     }
 
-    session([
-        'selected_room' => $room->id
-    ]);
+    public function selectRoom(Room $room)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
 
-    return redirect()->route('tenant.payments.create');
-}
+        // Sudah memilih kamar
+        if ($user->selected_room_id) {
+            return back()->with('error', 'Anda sudah memilih kamar.');
+        }
 
+        // Kamar tidak tersedia
+        if ($room->status !== 'vacant') {
+            return back()->with('error', 'Kamar sudah ditempati.');
+        }
+
+        $user->update([
+            'selected_room_id' => $room->id,
+        ]);
+
+        return redirect()
+            ->route('tenant.dashboard')
+            ->with('success', 'Kamar berhasil dipilih. Silakan lanjutkan pembayaran.');
+    }
 }

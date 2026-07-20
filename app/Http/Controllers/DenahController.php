@@ -3,62 +3,63 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
-use App\Models\RoomHistory; // Pastikan model ini di-import jika Anda menggunakannya
 use Illuminate\Http\Request;
 
 class DenahController extends Controller
 {
     /**
-     * Tampilkan denah kamar dengan filter lantai dan sorting nomor kamar.
+     * Tampilkan denah kamar (visual only, belum interaktif).
+     * Dikelompokkan per lantai, warna kartu mengikuti status kamar.
      */
-    public function index(Request $request)
+    public function index(Request $request) // Sesuaikan nama method-nya (misal: index atau denah)
     {
-        $currentFloor = $request->query('floor');
+        // 1. Hitung statistik langsung dari database
 
-        // 1. Ambil data kamar, load relasi tenant, & urutkan berdasarkan nomor kamar terkecil (sorting)
-        $roomsQuery = Room::with('tenant')->orderBy('room_number', 'asc');
-
-        if ($currentFloor) {
-            $roomsQuery->where('floor', $currentFloor);
-        }
-
-        $rooms = $roomsQuery->get();
-
-        // 2. Hitung statistik real-time dari database
-        // Menggunakan whereIn agar aman baik menggunakan bahasa Inggris (vacant/occupied) maupun Indonesia (kosong/terisi)
+        // (Silakan sesuaikan string 'kosong', 'pending', 'terisi' dengan isi enum status di DB kamu)
         $totalRooms = Room::count();
-        $availableRooms = Room::whereIn('status', ['vacant', 'kosong', 'available', 'tersedia'])->count();
-        $pendingRooms = Room::whereIn('status', ['pending', 'waiting'])->count();
-        $occupiedRooms = Room::whereIn('status', ['occupied', 'terisi'])->count();
+        $availableRooms = Room::where('status', 'kosong')->count();
+        $pendingRooms = Room::where('status', 'pending')->count();
+        $occupiedRooms = Room::where('status', 'terisi')->count();
 
-        // 3. Ambil data riwayat aktivitas terbaru (maksimal 5)
-        // Diberi pengecekan class_exists agar aplikasi tidak crash jika model RoomHistory belum dibuat
-        $roomHistories = [];
-        if (class_exists(RoomHistory::class)) {
-            $roomHistories = RoomHistory::with(['room', 'user'])->latest()->take(5)->get();
-        }
+        // 2. Ambil semua data kamar untuk kebutuhan grid denah
+        $rooms = Room::all();
 
-        // 4. Return ke file view denah Anda. 
-        // Silakan sesuaikan 'rooms.denah' dengan lokasi file blade Anda yang sebenarnya (misal: 'denah.index')
-        $viewPath = view()->exists('rooms.denah') ? 'rooms.denah' : 'denah.index';
-
-        return view($viewPath, compact(
-            'rooms',
+        // 3. PENTING: Kirim semua variabel ke view agar tidak error Undefined Variable lagi
+        return view('denah.index', compact(
             'totalRooms',
             'availableRooms',
             'pendingRooms',
             'occupiedRooms',
-            'currentFloor',
-            'roomHistories'
+            'rooms'
         ));
     }
-
-    /**
-     * Jika route di web.php Anda mengarah ke method 'denah',
-     * method ini akan otomatis memanggil fungsi utama 'index' di atas agar tidak duplikasi kode.
-     */
     public function denah(Request $request)
     {
-        return $this->index($request);
+    $currentFloor = $request->query('floor');
+
+    // 1. Ambil data kamar beserta relasi penyewanya
+    $roomsQuery = Room::with('tenant'); // Sesuaikan nama relasi di model Room Anda (tenant/user)
+
+    if ($currentFloor) {
+        $roomsQuery->where('floor', $currentFloor);
     }
+
+    $rooms = $roomsQuery->get();
+
+    // 2. Hitung statistik real-time dari database
+    // Catatan: sesuaikan string value status ('vacant', 'occupied', 'pending') dengan enum di DB Anda
+    $totalRooms = Room::count();
+    $availableRooms = Room::where('status', 'vacant')->count();
+    $pendingRooms = Room::where('status', 'pending')->count();
+    $occupiedRooms = Room::where('status', 'occupied')->count();
+
+    return view('rooms.denah', compact(
+        'rooms',
+        'totalRooms',
+        'availableRooms',
+        'pendingRooms',
+        'occupiedRooms',
+        'currentFloor'
+    ));
+}
 }

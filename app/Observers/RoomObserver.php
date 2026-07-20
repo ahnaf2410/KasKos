@@ -12,62 +12,44 @@ class RoomObserver
      */
     public function updated(Room $room): void
     {
+        // Cek apakah ada perubahan pada kolom tenant_id di tabel rooms
         if ($room->isDirty('tenant_id')) {
-
             $oldTenantId = $room->getOriginal('tenant_id');
             $newTenantId = $room->tenant_id;
 
-
-            // CHECK-IN
+            // KASUS 1: Kamar baru ditempati (Check-in)
             if (is_null($oldTenantId) && !is_null($newTenantId)) {
-
                 RoomHistory::create([
                     'room_id' => $room->id,
-                    'user_id' => $newTenantId,
-                    'status' => 'active',
-                    'start_date' => now(),
+                    'user_id' => $newTenantId, // Menggunakan user_id sesuai database
+                    'status'  => 'active',
                 ]);
-
             }
 
-
-            // CHECK-OUT
+            // KASUS 2: Penghuni keluar (Check-out)
             elseif (!is_null($oldTenantId) && is_null($newTenantId)) {
-
                 RoomHistory::create([
                     'room_id' => $room->id,
-                    'user_id' => $oldTenantId,
-                    'status' => 'left',
-                    'end_date' => now(),
+                    'user_id' => $oldTenantId, // Menggunakan user_id sesuai database
+                    'status'  => 'left',
                 ]);
-
             }
 
-
-            // GANTI PENGHUNI
-            elseif (
-                !is_null($oldTenantId) &&
-                !is_null($newTenantId) &&
-                $oldTenantId != $newTenantId
-            ) {
-
-                // penghuni lama keluar
+            // KASUS 3: Pergantian penghuni langsung
+            elseif (!is_null($oldTenantId) && !is_null($newTenantId) && $oldTenantId != $newTenantId) {
+                // Catat penghuni lama keluar
                 RoomHistory::create([
                     'room_id' => $room->id,
                     'user_id' => $oldTenantId,
-                    'status' => 'left',
-                    'end_date' => now(),
+                    'status'  => 'left',
                 ]);
 
-
-                // penghuni baru masuk
+                // Catat penghuni baru masuk
                 RoomHistory::create([
                     'room_id' => $room->id,
                     'user_id' => $newTenantId,
-                    'status' => 'active',
-                    'start_date' => now(),
+                    'status'  => 'active',
                 ]);
-
             }
         }
     }
