@@ -52,7 +52,7 @@
             </a>
 
             {{-- Denah --}}
-            <a href="{{ route('tenant.rooms.index') }}"
+            <a href="{{ route('tenant.denah.index') }}"
                 class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
                 {{ $active == 'denah'
                     ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20'

@@ -72,7 +72,7 @@ Route::middleware(['auth', 'role:Tenant'])
         Route::get('/dashboard', [TenantDashboardController::class, 'index'])->name('dashboard');
 
         // Manajemen Kamar Tenant (URL: /tenant/kamar-saya)
-        Route::get('/denah', [TenantRoomController::class, 'index'])->name('rooms.index');
+        Route::get('/denah', [TenantRoomController::class, 'index'])->name('denah.index');
         Route::get('/denah/{room}', [TenantRoomController::class, 'show'])->name('rooms.show');
         Route::post('/denah/{room}/select', [TenantRoomController::class, 'selectRoom'])->name('rooms.select');
 
@@ -94,6 +94,11 @@ Route::middleware(['auth', 'role:Tenant'])
 
         // 3. Memproses aksi pembayaran dari tagihan (Aksi tombol "Bayar Sekarang")
         Route::post('/tagihan/{id}/bayar', [TagihanController::class, 'bayar'])->name('tagihan.bayar');
+
+        Route::get('/rooms', [TenantRoomController::class, 'index'])
+    ->name('rooms.index');
+    //     Route::get('/denah', [TenantRoomController::class, 'index'])
+    // ->name('denah.index');
 
     });
 

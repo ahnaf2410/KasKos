@@ -31,7 +31,7 @@ class RoomController extends Controller
             ->get();
 
         // 3. Arahkan ke lokasi view denah baru kamu
-        return view('tenant.denah.index', compact(
+        return view('tenant.rooms.index', compact(
             'rooms',
             'totalRooms',
             'availableRooms',
