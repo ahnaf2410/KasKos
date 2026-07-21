@@ -21,38 +21,342 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+# 🏠 KasKos
+### Sistem Informasi KasKos Berbasis Web Sebagai Media Transparansi Keuangan Patungan dan Pemetaan Denah Kamar Digital Internal Penghuni Kos
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+KasKos merupakan aplikasi berbasis web yang dirancang untuk membantu pengelolaan keuangan kos secara transparan. Sistem ini menyediakan fitur pencatatan tagihan bersama, pembayaran sewa kamar, denah kamar digital, serta riwayat perpindahan penghuni sehingga pengelolaan kos menjadi lebih mudah, rapi, dan terdokumentasi.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+# Fitur Utama
 
-## Agentic Development
+## Autentikasi & Hak Akses
+- Login
+- Register
+- Logout
+- Role Admin
+- Role Penghuni
+- Middleware Spatie Permission
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
+
+## Manajemen Kamar
+- CRUD Data Kamar
+- Status kamar (Kosong / Terisi)
+- Harga sewa kamar
+- Assign penghuni ke kamar
+- Riwayat penghuni kamar
+- Relasi Many-to-Many User ↔ Kamar
+
+---
+
+## Denah Kamar Digital
+- Tampilan denah kamar seperti denah kursi bioskop
+- Klik kamar untuk melihat informasi
+- Klaim kamar kosong
+- Indikator warna kamar kosong dan terisi
+
+---
+
+## Riwayat Kamar (Rooms History)
+Mencatat seluruh aktivitas perpindahan penghuni secara otomatis.
+
+Contoh aktivitas:
+- Penghuni masuk kamar
+- Penghuni pindah kamar
+- Penghuni keluar kamar
+
+---
+
+## Kategori Tagihan
+- CRUD kategori
+- Listrik
+- Air
+- WiFi
+- Sampah
+- Kebersihan
+- Gas
+- dan kategori lainnya
+
+---
+
+## Tagihan Patungan
+Admin dapat membuat tagihan bulanan.
+
+Fitur:
+- Total tagihan
+- Periode
+- Jatuh tempo
+- Auto Split ke seluruh penghuni aktif
+
+---
+
+## Pembayaran Patungan
+Penghuni dapat:
+
+- Melihat tagihan
+- Upload bukti transfer
+- Melihat status pembayaran
+
+Admin dapat:
+
+- Verifikasi pembayaran
+- Menolak pembayaran
+- Memberikan catatan
+
+---
+
+## Pembayaran Sewa Kamar
+Pembayaran pribadi untuk biaya sewa kamar.
+
+Fitur:
+- Tagihan otomatis berdasarkan harga kamar
+- Upload bukti transfer
+- Verifikasi Admin
+- Riwayat pembayaran
+
+---
+
+## Dashboard
+
+### Dashboard Admin
+
+Menampilkan:
+
+- Total kamar
+- Kamar terisi
+- Kamar kosong
+- Total tagihan
+- Pembayaran menunggu verifikasi
+- Statistik pembayaran
+
+### Dashboard Penghuni
+
+Menampilkan:
+
+- Informasi kamar
+- Tagihan aktif
+- Status pembayaran
+- Riwayat pembayaran
+
+---
+
+## REST API
+
+API yang tersedia antara lain:
+
+- API Kamar
+- API Tagihan
+- API Riwayat Kamar
+
+---
+
+# Struktur Database
+
+Beberapa tabel utama:
+
+- users
+- roles
+- permissions
+- kamars
+- kamar_user
+- rooms_history
+- kategori_tagihans
+- tagihans
+- pembayarans
+- pembayaran_sewas
+
+---
+
+
+# 🛠️ Tech Stack
+
+## Backend
+
+- Laravel 13
+- PHP 8.x
+
+## Frontend
+
+- Blade
+- Tailwind CSS
+- Alpine.js
+
+## Database
+
+- MySQL
+
+## Authentication
+
+- Laravel Breeze
+
+## Authorization
+
+- Spatie Permission
+
+## API
+
+- Laravel Resource API
+
+---
+
+# 📦 Instalasi Project
+
+Clone repository
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/username/KasKos.git
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Masuk ke folder project
 
-## Contributing
+```bash
+cd KasKos
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Install dependency
 
-## Code of Conduct
+```bash
+composer install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Install Node Module
 
-## Security Vulnerabilities
+```bash
+npm install
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Copy file environment
 
-## License
+```bash
+cp .env.example .env
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Generate application key
+
+```bash
+php artisan key:generate
+```
+
+Atur database pada file `.env`
+
+```
+DB_DATABASE=kaskos
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Jalankan migration
+
+```bash
+php artisan migrate
+```
+
+Jalankan seeder
+
+```bash
+php artisan db:seed
+```
+
+Atau
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+Compile asset
+
+```bash
+npm run dev
+```
+
+Jalankan server
+
+```bash
+php artisan serve
+```
+
+Akses aplikasi
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+# 👥 Akun Default
+
+## Admin
+
+Username : admin_kaskos
+Password : password123
+
+## Tenant
+
+Username : tenant_kaskos
+Password : password123
+
+---
+
+# 📷 Screenshot
+
+## Halaman Welcome
+
+[ss]
+
+---
+
+## Login
+
+[ss]
+---
+
+## Dashboard Admin
+
+[ss]
+---
+
+## Dashboard Penghuni
+
+[ss]
+---
+
+## Manajemen Kamar
+
+[ss]
+---
+
+## Denah Kamar
+
+[ss]
+---
+
+## Tagihan
+
+[ss]
+---
+
+## Pembayaran
+
+[ss]
+---
+
+# 👨‍💻 Tim Pengembang
+
+| Nama | NIM | Tugas |
+|-------|-------|
+| Ahnaf Musyaffa | 230102012 | CRUD Kamar & Relasi Kamar |
+| Daffa Aqila Riyadi | 230102031 | Denah Kamar & Rooms History |
+| Fauzi Maulana Akbar | 230102049 | Kategori Tagihan & Tagihan |
+| Melani Anggraena | 230102073 | Pembayaran Patungan & Pembayaran Sewa |
+| Tia Pebriyanti | 230102125 | Dashboard, Testing & Dokumentasi |
+
+---
+
+# 📄 Lisensi
+
+Project ini dibuat untuk memenuhi tugas mata kuliah **Pemrograman Web Berbasis Framework** Program Studi Teknik Informatika Universitas Muhammadiyah Bandung.
+
+---
+
+**KasKos © 2026**
