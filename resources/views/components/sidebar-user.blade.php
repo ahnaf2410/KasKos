@@ -1,3 +1,4 @@
+//komen
 @props(['active' => 'dashboard'])
 
 <aside id="sidebar"
