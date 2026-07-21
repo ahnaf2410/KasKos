@@ -42,7 +42,9 @@ class BillCategoryController extends Controller
 
         BillCategoryLog::create([
             'category_name' => $category->category_name,
-            'admin_name'    => Auth::user()->name ?? 'Budi Setiawan',
+            'old_price'     => 0,
+            'new_price'     => $request->price,
+            'admin_name'    => Auth::user()->name ?? 'Admin',
             'action'        => 'TAMBAH KATEGORI'
         ]);
 
@@ -60,16 +62,25 @@ class BillCategoryController extends Controller
 
         $category = BillCategory::findOrFail($id);
 
+        $oldPrice = $category->price;
+
         // Mengubah data secara eksplisit agar pasti berubah
         $category->category_name = $request->category_name;
         $category->price = $request->price;
         $category->default_active = $request->default_active;
         $category->save();
 
+        $actionMsg = 'EDIT KATEGORI';
+        if ($oldPrice != $request->price) {
+            $actionMsg = 'UBAH HARGA: Rp ' . number_format($oldPrice, 0, ',', '.') . ' → Rp ' . number_format($request->price, 0, ',', '.');
+        }
+
         BillCategoryLog::create([
             'category_name' => $category->category_name,
-            'admin_name'    => Auth::user()->name ?? 'Budi Setiawan',
-            'action'        => 'EDIT KATEGORI'
+            'old_price'     => $oldPrice,
+            'new_price'     => $request->price,
+            'admin_name'    => Auth::user()->name ?? 'Admin',
+            'action'        => $actionMsg,
         ]);
 
         return redirect()->back()->with('success', 'Kategori tagihan berhasil diperbarui!');
@@ -85,7 +96,9 @@ class BillCategoryController extends Controller
 
         BillCategoryLog::create([
             'category_name' => $categoryName,
-            'admin_name'    => Auth::user()->name ?? 'Budi Setiawan',
+            'old_price'     => $category->price,
+            'new_price'     => 0,
+            'admin_name'    => Auth::user()->name ?? 'Admin',
             'action'        => 'HAPUS KATEGORI'
         ]);
 
@@ -101,8 +114,10 @@ class BillCategoryController extends Controller
 
         BillCategoryLog::create([
             'category_name' => $category->category_name,
-            'admin_name'    => Auth::user()->name ?? 'Budi Setiawan',
-            'action'        => 'STATUS TOGGLE',
+            'old_price'     => $category->price,
+            'new_price'     => $category->price,
+            'admin_name'    => Auth::user()->name ?? 'Admin',
+            'action'        => $category->default_active ? 'AKTIFKAN KATEGORI' : 'NONAKTIFKAN KATEGORI',
         ]);
 
         return redirect()->back()->with('success', 'Status default aktif berhasil diperbarui!');

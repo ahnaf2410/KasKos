@@ -9,47 +9,39 @@ class BillSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('bills')->insert([
-            [
-                'bill_category_id' => 1,
-                'title' => 'Tagihan Listrik Juli 2026',
-                'total_bill' => 500000,
-                'period' => '2026-07',
-                'due_date' => '2026-07-31',
-                'created_by' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'bill_category_id' => 2,
-                'title' => 'Tagihan Air Juli 2026',
-                'total_bill' => 300000,
-                'period' => '2026-07',
-                'due_date' => '2026-07-31',
-                'created_by' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'bill_category_id' => 3,
-                'title' => 'Tagihan Internet Juli 2026',
-                'total_bill' => 450000,
-                'period' => '2026-07',
-                'due_date' => '2026-07-31',
-                'created_by' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'bill_category_id' => 4,
-                'title' => 'Tagihan Kebersihan Juli 2026',
-                'total_bill' => 200000,
-                'period' => '2026-07',
-                'due_date' => '2026-07-31',
-                'created_by' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        $bills = [];
+        // 8 kategori tagihan
+        $categories = DB::table('bill_categories')->get();
+        $months = ['2026-05', '2026-06', '2026-07'];
+
+        foreach ($months as $mi => $period) {
+            foreach ($categories as $ci => $cat) {
+                // Due date: setiap tanggal 10 bulan berikutnya
+                $monthNum = (int) substr($period, 5, 2);
+                $yearNum = (int) substr($period, 0, 4);
+                if ($monthNum == 12) {
+                    $dueMonth = 1;
+                    $dueYear = $yearNum + 1;
+                } else {
+                    $dueMonth = $monthNum + 1;
+                    $dueYear = $yearNum;
+                }
+                $dueDate = sprintf('%04d-%02d-10', $dueYear, $dueMonth);
+
+                $bills[] = [
+                    'bill_category_id' => $cat->id,
+                    'title' => 'Tagihan ' . $cat->category_name . ' ' . $period,
+                    'total_bill' => $cat->price,
+                    'period' => $period,
+                    'due_date' => $dueDate,
+                    'created_by' => 1,
+                    'created_at' => $period . '-' . str_pad(rand(1, 5), 2, '0', STR_PAD_LEFT) . ' 10:00:00',
+                    'updated_at' => $period . '-' . str_pad(rand(1, 5), 2, '0', STR_PAD_LEFT) . ' 10:00:00',
+                ];
+            }
+        }
+
+        DB::table('bills')->insert($bills);
     }
 }
+

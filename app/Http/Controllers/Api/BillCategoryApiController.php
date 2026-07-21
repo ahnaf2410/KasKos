@@ -9,28 +9,15 @@ use Illuminate\Http\Request;
 
 class BillCategoryApiController extends Controller
 {
-    /**
-     * GET /api/bill-categories
-     * List semua kategori tagihan. Support ?search= dan pagination.
-     */
-    public function index(Request $request)
+    public function index()
     {
-        $search = $request->query('search');
-
-        $categories = BillCategory::query()
-            ->when($search, fn ($q) => $q->where('category_name', 'like', "%{$search}%"))
-            ->orderBy('category_name')
-            ->paginate(10);
-
-        return BillCategoryResource::collection($categories);
+        return response()->json(BillCategory::all());
     }
 
-    /**
-     * GET /api/bill-categories/{id}
-     * Detail satu kategori tagihan.
-     */
-    public function show(BillCategory $billCategory)
+    public function show($id)
     {
-        return new BillCategoryResource($billCategory);
+        $category = BillCategory::findOrFail($id);
+        return response()->json($category);
     }
 }
+

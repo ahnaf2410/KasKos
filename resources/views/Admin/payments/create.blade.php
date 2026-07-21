@@ -3,49 +3,33 @@
 <div class="max-w-2xl mx-auto py-8">
     <h2 class="text-xl font-semibold mb-5">Tambah Pembayaran Patungan</h2>
 
-    <form action="{{ route('admin.payments.store') }}" method="POST" class="bg-white rounded-lg shadow p-6 space-y-4">
+<form action="{{ route('admin.payments.store') }}" method="POST" class="bg-white rounded-lg shadow p-6 space-y-4">
         @csrf
 
         <div>
-            <label class="block mb-1 text-sm font-medium">Tagihan</label>
-            <select name="bill_id" class="w-full rounded-lg border-gray-300">
-                <option value="">-- Pilih Tagihan --</option>
-                @foreach($bills as $bill)
-                    <option value="{{ $bill->id }}" @selected(old('bill_id')==$bill->id)>
-                        {{ $bill->title }} ({{ $bill->period }})
-                    </option>
-                @endforeach
-            </select>
-            @error('bill_id') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+            <label class="block mb-1 text-sm font-medium">Kategori Tagihan</label>
+            <select name="bill_category_id" id="bill_category_id" class="w-full rounded-lg border-gray-300" onchange="updateSplitInfo()">
+                    <option value="">-- Pilih Kategori Tagihan --</option>
+
+                    @foreach($billCategories as $category)
+                        <option value="{{ $category->id }}"
+                            data-price="{{ $category->price }}"
+                            @selected(old('bill_category_id')==$category->id)>
+                            {{ $category->category_name }} (Rp {{ number_format($category->price, 0, ',', '.') }})
+                        </option>
+                    @endforeach
+                </select>
+            @error('bill_category_id') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
         </div>
 
-        <div>
-            <label class="block mb-1 text-sm font-medium">Penghuni</label>
-            <select name="user_id" class="w-full rounded-lg border-gray-300">
-                <option value="">-- Pilih Penghuni --</option>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}" @selected(old('user_id')==$user->id)>
-                        {{ $user->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('user_id') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
-        </div>
-
-        <div>
-            <label class="block mb-1 text-sm font-medium">Jumlah Bagian</label>
-            <div class="relative">
-                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rp</span>
-                <input
-                    type="text"
-                    inputmode="numeric"
-                    id="split_amount_display"
-                    value="{{ old('split_amount') ? number_format((float) old('split_amount'), 0, ',', '.') : '' }}"
-                    class="w-full rounded-lg border-gray-300 pl-10"
-                    oninput="formatRupiah(this)">
-                <input type="hidden" name="split_amount" id="split_amount" value="{{ old('split_amount') }}">
+        {{-- Auto Split Info --}}
+        <div class="p-4 bg-blue-50 border border-blue-100 rounded-lg">
+            <h4 class="text-sm font-bold text-blue-800 mb-2">Informasi Pembagian Otomatis</h4>
+            <div class="space-y-1 text-sm">
+                <p class="text-blue-700">Jumlah penghuni aktif: <strong>{{ $occupiedRoomsCount }} kamar</strong></p>
+                <p class="text-blue-700">Pembagian otomatis: <strong id="split_info_display">Pilih kategori tagihan terlebih dahulu</strong></p>
+                <p class="text-xs text-blue-600 mt-2">Sistem akan membuat tagihan untuk SEMUA penghuni secara otomatis.</p>
             </div>
-            @error('split_amount') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
         </div>
 
         <div>
@@ -60,20 +44,38 @@
         <div>
             <label class="block mb-1 text-sm font-medium">Catatan</label>
             <textarea name="notes" class="w-full rounded-lg border-gray-300">{{ old('notes') }}</textarea>
+            <p class="text-xs text-gray-400 mt-1">Catatan ini akan diterapkan ke semua tagihan penghuni.</p>
         </div>
 
         <div class="flex justify-end gap-2">
             <a href="{{ route('admin.payments.index') }}" class="px-4 py-2 rounded-lg bg-gray-200">Batal</a>
-            <button class="px-4 py-2 rounded-lg bg-blue-600 text-white">Simpan</button>
+            <button class="px-4 py-2 rounded-lg bg-blue-600 text-white">Simpan & Bagikan ke Semua</button>
         </div>
     </form>
 </div>
 
 <script>
-function formatRupiah(input) {
-    let raw = input.value.replace(/\D/g, '');
-    document.getElementById('split_amount').value = raw;
-    input.value = raw ? new Intl.NumberFormat('id-ID').format(raw) : '';
+function updateSplitInfo() {
+    const select = document.getElementById('bill_category_id');
+    const selected = select.options[select.selectedIndex];
+    const display = document.getElementById('split_info_display');
+    const occupiedCount = {{ $occupiedRoomsCount }};
+
+    if (selected && selected.dataset.price) {
+        const price = parseFloat(selected.dataset.price);
+        const splitAmount = price / occupiedCount;
+        display.innerHTML = 'Rp ' + new Intl.NumberFormat('id-ID').format(splitAmount) + ' / tenant (dari Rp ' + new Intl.NumberFormat('id-ID').format(price) + ' dibagi ' + occupiedCount + ' kamar)';
+    } else {
+        display.innerHTML = 'Pilih kategori tagihan terlebih dahulu';
+    }
 }
+
+// Auto-update on page load if old value exists
+document.addEventListener('DOMContentLoaded', function() {
+    const select = document.getElementById('bill_category_id');
+    if (select.value) {
+        updateSplitInfo();
+    }
+});
 </script>
 @endsection

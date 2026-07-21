@@ -69,7 +69,7 @@
             </a>
 
             {{-- Tagihan --}}
-            <a href="{{ route('tenant.tagihan.index') }}"
+            <a href="{{ route('tenant.payments.index') }}"
                 class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
                 {{ $active == 'tagihan'
                     ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20'
@@ -86,7 +86,8 @@
             </a>
 
             {{-- Patungan --}}
-            <a href="#"
+            
+            <a href="{{ route('tenant.tagihan.index') }}"
                 class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
                 {{ $active == 'patungan'
                     ? 'bg-rose-500 text-white font-semibold shadow-md shadow-rose-500/20'
@@ -99,7 +100,7 @@
                         d="M17 20h5V4H2v16h5m10 0v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4m10 0H7" />
                 </svg>
 
-                <span class="text-sm">Patungan</span>
+                <span class="text-sm">Biaya Sewa</span>
             </a>
 
             {{-- Riwayat --}}

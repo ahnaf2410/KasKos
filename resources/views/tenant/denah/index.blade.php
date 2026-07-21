@@ -38,6 +38,10 @@
                     <span class="w-2.5 h-2.5 rounded-full bg-[#801824]"></span>
                     <span class="text-slate-600">Terisi</span>
                 </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full border-2 border-yellow-400 bg-transparent"></span>
+                    <span class="text-slate-600">Kamar Saya</span>
+                </div>
             </div>
         </div>
 
@@ -102,8 +106,11 @@
                 @endphp
 
                 @if(in_array($status, ['occupied', 'terisi']))
+                    @php
+                        $isCurrentUserRoom = auth()->id() && $room->tenant_id === auth()->id();
+                    @endphp
                     {{-- Card Terisi (Klik tetap mengarah ke detail) --}}
-                    <a href="{{ route('tenant.rooms.show', $room) }}" class="bg-[#801824] text-white rounded-2xl p-4 flex flex-col justify-between items-center text-center h-44 shadow-sm hover:scale-[1.02] transition duration-200 cursor-pointer">
+                    <a href="{{ route('tenant.rooms.show', $room) }}" class="bg-[#801824] text-white rounded-2xl p-4 flex flex-col justify-between items-center text-center h-44 shadow-sm hover:scale-[1.02] transition duration-200 cursor-pointer {{ $isCurrentUserRoom ? 'ring-4 ring-yellow-400 ring-offset-2' : '' }}">
                         <span class="text-[10px] font-bold tracking-wider opacity-60 uppercase">Room</span>
                         <h3 class="text-xl font-extrabold -mt-1">{{ $room->room_number }}</h3>
                         <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center font-bold text-sm tracking-wide my-1">

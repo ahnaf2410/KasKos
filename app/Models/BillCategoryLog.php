@@ -13,6 +13,8 @@ class BillCategoryLog extends Model
 
     protected $fillable = [
         'category_name',
+        'old_price',
+        'new_price',
         'admin_name',
         'action'
     ];

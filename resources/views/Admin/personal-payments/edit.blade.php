@@ -23,39 +23,6 @@
 
         <div class="grid grid-cols-2 gap-6">
 
-            {{-- Kamar --}}
-            <div>
-
-                <label class="block font-semibold mb-2">
-                    Kamar
-                </label>
-
-                <select
-                    id="room"
-                    name="room_id"
-                    class="w-full rounded-xl border-gray-300">
-
-                    @foreach($rooms as $room)
-
-                        <option
-                            value="{{ $room->id }}"
-                            data-price="{{ $room->rental_price }}"
-                            @selected($payment->room_id == $room->id)>
-
-                            {{ $room->room_number }}
-
-                        </option>
-
-                    @endforeach
-
-                </select>
-
-                @error('room_id')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-
-            </div>
-
             {{-- Penghuni --}}
             <div>
 
@@ -65,15 +32,18 @@
 
                 <select
                     name="user_id"
-                    class="w-full rounded-xl border-gray-300">
+                    id="user_id"
+                    class="w-full rounded-xl border-gray-300"
+                    onchange="autoFillAmount(this)">
 
                     @foreach($users as $user)
 
                         <option
                             value="{{ $user->id }}"
+                            data-price="{{ $user->room?->rental_price ?? 0 }}"
                             @selected($payment->user_id == $user->id)>
 
-                            {{ $user->name }}
+                            {{ $user->name }} {{ $user->room ? '(Kamar '.$user->room->room_number.')' : '(Belum punya kamar)' }}
 
                         </option>
 
@@ -110,19 +80,15 @@
                 </label>
 
                 <input
-                    id="amount_display"
-                    type="text"
-                    readonly
-                    class="w-full rounded-xl bg-gray-100 border-gray-300">
-
-                <input
                     id="amount"
-                    type="hidden"
+                    type="number"
                     name="amount"
-                    value="{{ old('amount', $payment->amount) }}">
+                    value="{{ old('amount', $payment->amount) }}"
+                    class="w-full rounded-xl bg-gray-100 border-gray-300"
+                    readonly>
 
                 <p class="text-xs text-gray-500 mt-1">
-                    Nominal mengikuti harga sewa kamar.
+                    Nominal otomatis mengikuti harga sewa kamar penghuni.
                 </p>
 
             </div>
@@ -216,9 +182,19 @@
 </div>
 
 <script>
+function autoFillAmount(select) {
+    const selected = select.options[select.selectedIndex];
+    const price = selected ? parseFloat(selected.dataset.price) || 0 : 0;
+    document.getElementById('amount').value = price;
+}
 
-
-
+// Auto-fill on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const select = document.getElementById('user_id');
+    if (select.value) {
+        autoFillAmount(select);
+    }
+});
 </script>
 
 @endsection

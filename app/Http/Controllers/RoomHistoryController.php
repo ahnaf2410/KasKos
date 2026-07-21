@@ -12,19 +12,18 @@ class RoomHistoryController extends Controller
 {
     public function index(Request $request)
     {
-        // ... isi method index tetap sama seperti sebelumnya
-        $query = RoomHistory::with(['tenant', 'oldRoom', 'newRoom']);
+        $query = RoomHistory::with(['user', 'room']);
 
         // Filter Pencarian Nama Penghuni
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->whereHas('tenant', function ($q) use ($search) {
+            $query->whereHas('user', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%");
             });
         }
 
         if ($request->filled('room')) {
-            $query->where('new_room_id', $request->room);
+            $query->where('room_id', $request->room);
         }
 
         if ($request->filled('date')) {
@@ -43,30 +42,27 @@ class RoomHistoryController extends Controller
 
     public function getRoomTimeline($roomId)
     {
-        // ... isi method getRoomTimeline tetap sama
         $room = Room::findOrFail($roomId);
-        $timeline = RoomHistory::with('tenant')
-            ->where('new_room_id', $roomId)
-            ->orWhere('old_room_id', $roomId)
+        $timeline = RoomHistory::with('user')
+            ->where('room_id', $roomId)
             ->orderBy('start_date', 'desc')
             ->get()
-            ->map(function ($history) use ($roomId) {
-                $isNewRoom = $history->new_room_id == $roomId;
+            ->map(function ($history) use ($room) {
                 $start = Carbon::parse($history->start_date)->translatedFormat('M Y');
                 $end = $history->end_date ? Carbon::parse($history->end_date)->translatedFormat('M Y') : 'Sekarang';
 
                 return [
                     'date' => "{$start} - {$end}",
-                    'title' => $isNewRoom ? "Dihuni oleh " . ($history->tenant->name ?? 'Tanpa Nama') : "Pindah Keluar: " . ($history->tenant->name ?? 'Tanpa Nama'),
-                    'desc' => $history->notes ?? ($isNewRoom ? "Mulai menempati kamar." : "Pindah ke kamar lain."),
+                    'title' => "Dihuni oleh " . ($history->user->name ?? 'Tanpa Nama'),
+                    'desc' => $history->status == 'active' ? "Masih menempati kamar." : ($history->status == 'left' ? "Sudah keluar." : "Pindah kamar."),
                     'status' => $history->status,
-                    'badges' => [$isNewRoom ? "Masuk" : "Keluar", "Lantai " . ($room->floor ?? '1')]
+                    'badges' => [ucfirst($history->status), "Lantai " . ($room->floor ?? '1')]
                 ];
             });
 
         return response()->json([
             'room_number' => $room->room_number,
-            'room_type' => $room->room_type ?? 'Standard Room',
+            'room_type' => $room->description ?? 'Standard Room',
             'floor' => $room->floor ?? '1',
             'timeline' => $timeline
         ]);

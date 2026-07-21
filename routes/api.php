@@ -2,16 +2,42 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RoomApiController;
 use App\Http\Controllers\Api\BillCategoryApiController;
 
-// 1. Route CRUD Room (Menggunakan bahasa Inggris 'room')
-Route::apiResource('room', RoomApiController::class);
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "api" middleware group.
+|
+*/
 
-// 2. Route untuk mengambil riwayat room tertentu
-Route::get('room/{id}/history', [RoomApiController::class, 'history']);
+// ==================== Public API Routes ====================
 
+// Auth (tanpa token)
+Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/login', [AuthController::class, 'login']);
 
-// 3. Route Kategori Tagihan (read-only: index + show)
-Route::get('bill-categories', [BillCategoryApiController::class, 'index']);
-Route::get('bill-categories/{billCategory}', [BillCategoryApiController::class, 'show']);
+// ==================== Protected API Routes (Sanctum) ====================
+Route::middleware('auth:sanctum')->group(function () {
+
+    // Auth (memerlukan token)
+    Route::get('/auth/me', [AuthController::class, 'me']);
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
+
+    // Room CRUD
+    Route::apiResource('room', RoomApiController::class);
+
+    // Room History
+    Route::get('room/{id}/history', [RoomApiController::class, 'history']);
+
+    // Bill Categories (read-only)
+    Route::get('bill-categories', [BillCategoryApiController::class, 'index']);
+    Route::get('bill-categories/{billCategory}', [BillCategoryApiController::class, 'show']);
+});
+
