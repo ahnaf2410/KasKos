@@ -63,7 +63,13 @@ class RoomController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Sudah memilih kamar
+        // Sudah memiliki kamar (cek tenant_id di rooms)
+        $existingRoom = Room::where('tenant_id', $user->id)->first();
+        if ($existingRoom) {
+            return back()->with('error', 'Anda sudah memiliki kamar: ' . $existingRoom->room_number);
+        }
+
+        // Sudah memilih kamar via selected_room_id
         if ($user->selected_room_id) {
             return back()->with('error', 'Anda sudah memilih kamar.');
         }
@@ -73,13 +79,37 @@ class RoomController extends Controller
             return back()->with('error', 'Kamar sudah ditempati.');
         }
 
-        $user->update([
-            'selected_room_id' => $room->id,
-        ]);
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            // Assign room ke user
+            $room->update([
+                'tenant_id' => $user->id,
+                'status'    => 'occupied',
+            ]);
 
-        return redirect()
-            ->route('tenant.dashboard')
-            ->with('success', 'Kamar berhasil dipilih. Silakan lanjutkan pembayaran.');
+            // Update user
+            $user->update([
+                'selected_room_id' => $room->id,
+            ]);
+
+            // Catat history room
+            \App\Models\RoomHistory::create([
+                'room_id'    => $room->id,
+                'user_id'    => $user->id,
+                'start_date' => date('Y-m-d'),
+                'end_date'   => null,
+                'status'     => 'active',
+            ]);
+
+            \Illuminate\Support\Facades\DB::commit();
+
+            return redirect()
+                ->route('tenant.dashboard')
+                ->with('success', 'Kamar ' . $room->room_number . ' berhasil dipilih. Selamat datang!');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     public function requestMove(Request $request, Room $room)
