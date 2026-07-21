@@ -1,4 +1,4 @@
-@extends('layouts.tenant', ['activePage' => 'pembayaran'])
+@extends('layouts.tenant', ['activePage' => 'patungan'])
 
 @section('content')
 <div x-data="{
