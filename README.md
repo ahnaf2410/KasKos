@@ -1,282 +1,244 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <h1 align="center">🏠 KasKos</h1>
+  <p align="center">
+    <b>Sistem Informasi Manajemen Kos Berbasis Web Sebagai Media Transparansi Keuangan Patungan dan Pemetaan Denah Kamar Digital</b>
+  </p>
 </p>
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# 📖 Tentang KasKos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**KasKos** merupakan aplikasi berbasis web yang dirancang untuk membantu pengelolaan kos secara efisien, rapi, dan transparan.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Sistem ini memisahkan hak akses antara **Admin (Pengelola Kos)** dan **Tenant (Penghuni Kos)** sehingga proses pengelolaan kos menjadi lebih terstruktur, mulai dari:
 
-# 🏠 KasKos
-### Sistem Informasi KasKos Berbasis Web Sebagai Media Transparansi Keuangan Patungan dan Pemetaan Denah Kamar Digital Internal Penghuni Kos
-
-KasKos merupakan aplikasi berbasis web yang dirancang untuk membantu pengelolaan keuangan kos secara transparan. Sistem ini menyediakan fitur pencatatan tagihan bersama, pembayaran sewa kamar, denah kamar digital, serta riwayat perpindahan penghuni sehingga pengelolaan kos menjadi lebih mudah, rapi, dan terdokumentasi.
+- 🏠 Manajemen data kamar
+- 💰 Pembayaran sewa kamar
+- 🤝 Tagihan patungan penghuni
+- 🗺️ Denah kamar digital interaktif
+- 📜 Riwayat perpindahan penghuni
+- 📊 Dashboard statistik
 
 ---
 
-# Fitur Utama
+# 🛠 Tech Stack
 
-## Autentikasi & Hak Akses
-- Login
-- Register
-- Logout
-- Role Admin
-- Role Penghuni
-- Middleware Spatie Permission
-
----
-
-## Manajemen Kamar
-- CRUD Data Kamar
-- Status kamar (Kosong / Terisi)
-- Harga sewa kamar
-- Assign penghuni ke kamar
-- Riwayat penghuni kamar
-- Relasi Many-to-Many User ↔ Kamar
-
----
-
-## Denah Kamar Digital
-- Tampilan denah kamar seperti denah kursi bioskop
-- Klik kamar untuk melihat informasi
-- Klaim kamar kosong
-- Indikator warna kamar kosong dan terisi
-
----
-
-## Riwayat Kamar (Rooms History)
-Mencatat seluruh aktivitas perpindahan penghuni secara otomatis.
-
-Contoh aktivitas:
-- Penghuni masuk kamar
-- Penghuni pindah kamar
-- Penghuni keluar kamar
-
----
-
-## Kategori Tagihan
-- CRUD kategori
-- Listrik
-- Air
-- WiFi
-- Sampah
-- Kebersihan
-- Gas
-- dan kategori lainnya
-
----
-
-## Tagihan Patungan
-Admin dapat membuat tagihan bulanan.
-
-Fitur:
-- Total tagihan
-- Periode
-- Jatuh tempo
-- Auto Split ke seluruh penghuni aktif
-
----
-
-## Pembayaran Patungan
-Penghuni dapat:
-
-- Melihat tagihan
-- Upload bukti transfer
-- Melihat status pembayaran
-
-Admin dapat:
-
-- Verifikasi pembayaran
-- Menolak pembayaran
-- Memberikan catatan
-
----
-
-## Pembayaran Sewa Kamar
-Pembayaran pribadi untuk biaya sewa kamar.
-
-Fitur:
-- Tagihan otomatis berdasarkan harga kamar
-- Upload bukti transfer
-- Verifikasi Admin
-- Riwayat pembayaran
-
----
-
-## Dashboard
-
-### Dashboard Admin
-
-Menampilkan:
-
-- Total kamar
-- Kamar terisi
-- Kamar kosong
-- Total tagihan
-- Pembayaran menunggu verifikasi
-- Statistik pembayaran
-
-### Dashboard Penghuni
-
-Menampilkan:
-
-- Informasi kamar
-- Tagihan aktif
-- Status pembayaran
-- Riwayat pembayaran
-
----
-
-## REST API
-
-API yang tersedia antara lain:
-
-- API Kamar
-- API Tagihan
-- API Riwayat Kamar
-
----
-
-# Struktur Database
-
-Beberapa tabel utama:
-
-- users
-- roles
-- permissions
-- kamars
-- kamar_user
-- rooms_history
-- kategori_tagihans
-- tagihans
-- pembayarans
-- pembayaran_sewas
+| Teknologi | Keterangan |
+|-----------|------------|
+| Backend | Laravel 13 |
+| Bahasa | PHP 8.x |
+| Database | MySQL (`kaskos_db`) |
+| Frontend | Blade, Tailwind CSS, Alpine.js |
+| Authentication | Laravel Breeze |
+| Authorization | Spatie Laravel Permission |
+| API | Laravel Eloquent API Resource |
 
 ---
 
 
-# 🛠️ Tech Stack
+# 🌿 Git Workflow
 
-## Backend
+## Format Branch
 
-- Laravel 13
-- PHP 8.x
+```text
+fitur/nama-fitur-namaanggota
+```
 
-## Frontend
+Contoh
 
-- Blade
-- Tailwind CSS
-- Alpine.js
+```text
+fitur/kamar-ahnaf
+fitur/rooms-history-daffa
+fitur/tagihan-fauzi
+fitur/personal-payment-melani
+fitur/dashboard-tia
+```
 
-## Database
+---
 
-- MySQL
+## Alur Git
 
-## Authentication
+```text
+Branch Fitur
+      │
+      ▼
+ Commit
+      │
+      ▼
+ Push GitHub
+      │
+      ▼
+ Pull Request
+      │
+      ▼
+ Code Review
+      │
+      ▼
+ Merge ke Main
+```
 
-- Laravel Breeze
+> **Catatan:** Dilarang melakukan commit langsung ke branch **main**.
 
-## Authorization
+---
 
-- Spatie Permission
+# 🌐 REST API
 
-## API
+## 1. API Kamar
 
-- Laravel Resource API
+| Method | Endpoint | Deskripsi |
+|---------|----------|-----------|
+| GET | `/api/room` | Semua kamar |
+| POST | `/api/room` | Tambah kamar |
+| GET | `/api/room/{id}` | Detail kamar |
+| PUT | `/api/room/{id}` | Update kamar |
+| DELETE | `/api/room/{id}` | Hapus kamar |
+| GET | `/api/room/{id}/history` | Riwayat kamar |
+
+### Contoh Request
+
+```json
+{
+    "room_number": "A-102",
+    "floor": 1,
+    "rental_price": 1500000,
+    "status": "vacant",
+    "description": "Kamar AC lantai 1"
+}
+```
+
+---
+
+## Update Kamar
+
+```json
+{
+    "room_number": "B-03",
+    "floor": 2,
+    "rental_price": 1500000,
+    "status": "occupied",
+    "tenant_id": 2,
+    "description": "Kamar lantai 2 non AC"
+}
+```
+
+---
+
+## 2. API Kategori Tagihan
+
+| Method | Endpoint |
+|---------|----------|
+| GET | `/api/kategori-tagihan` |
+| POST | `/api/kategori-tagihan` |
+| GET | `/api/kategori-tagihan/{id}` |
+| PUT | `/api/kategori-tagihan/{id}` |
+| DELETE | `/api/kategori-tagihan/{id}` |
+
+### Contoh Request
+
+```json
+{
+    "nama_kategori": "WiFi",
+    "nominal_default": 50000
+}
+```
+
+---
+
+### Update
+
+```json
+{
+    "nominal_default": 60000
+}
+```
+
+---
+
+# 🔑 Akun Default
+
+## Admin
+
+```
+Username : admin
+Password : password
+```
+
+## Tenant
+
+```
+Username : budi_tenant
+Password : password
+```
 
 ---
 
 # 📦 Instalasi Project
 
-Clone repository
+## 1. Clone Repository
 
 ```bash
-git clone https://github.com/username/KasKos.git
-```
-
-Masuk ke folder project
-
-```bash
+git clone https://github.com/ahnaf2410/KasKos.git
 cd KasKos
 ```
 
-Install dependency
+---
+
+## 2. Install Dependency
 
 ```bash
 composer install
-```
-
-Install Node Module
-
-```bash
 npm install
 ```
 
-Copy file environment
+---
+
+## 3. Konfigurasi Environment
 
 ```bash
 cp .env.example .env
-```
 
-Generate application key
-
-```bash
 php artisan key:generate
 ```
 
-Atur database pada file `.env`
+---
 
-```
-DB_DATABASE=kaskos
+## 4. Database
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=kaskos_db
 DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-Jalankan migration
+---
 
-```bash
-php artisan migrate
-```
-
-Jalankan seeder
-
-```bash
-php artisan db:seed
-```
-
-Atau
+## 5. Migration
 
 ```bash
 php artisan migrate:fresh --seed
 ```
 
-Compile asset
+---
+
+## 6. Jalankan Project
+
+Frontend
 
 ```bash
 npm run dev
 ```
 
-Jalankan server
+Backend
 
 ```bash
 php artisan serve
 ```
 
-Akses aplikasi
+Buka browser
 
 ```
 http://127.0.0.1:8000
@@ -284,79 +246,276 @@ http://127.0.0.1:8000
 
 ---
 
-# 👥 Akun Default
+# ✅ Checklist Demo
 
-## Admin
-
-Username : admin_kaskos
-Password : password123
-
-## Tenant
-
-Username : tenant_kaskos
-Password : password123
-
----
-
-# 📷 Screenshot
-
-## Halaman Welcome
-
-[ss]
+- [x] Relasi User ↔ Kamar
+- [x] Rooms History
+- [x] Denah Kamar
+- [x] Klaim Kamar
+- [x] CRUD Tagihan
+- [x] Auto Split Tagihan
+- [x] Upload Bukti Pembayaran
+- [x] Approval Pembayaran
+- [x] Payment Pribadi
+- [x] Dashboard Admin
+- [x] Dashboard Tenant
+- [x] REST API
+- [x] Pull Request telah di-merge
 
 ---
 
-## Login
+# 📷 Screenshot Aplikasi
 
-[ss]
----
+Berikut merupakan tampilan antarmuka aplikasi **KasKos**.
 
-## Dashboard Admin
+## 🌸 Splash Screen
 
-[ss]
----
+<p align="center">
+  <img src="screenshots/splash-screen.png" width="900">
+</p>
 
-## Dashboard Penghuni
+## 🌸 Login
 
-[ss]
----
-
-## Manajemen Kamar
-
-[ss]
----
-
-## Denah Kamar
-
-[ss]
----
-
-## Tagihan
-
-[ss]
----
-
-## Pembayaran
-
-[ss]
----
-
-# 👨‍💻 Tim Pengembang
-
-| Nama | NIM | Tugas |
-|-------|-------|
-| Ahnaf Musyaffa | 230102012 | CRUD Kamar & Relasi Kamar |
-| Daffa Aqila Riyadi | 230102031 | Denah Kamar & Rooms History |
-| Fauzi Maulana Akbar | 230102049 | Kategori Tagihan & Tagihan |
-| Melani Anggraena | 230102073 | Pembayaran Patungan & Pembayaran Sewa |
-| Tia Pebriyanti | 230102125 | Dashboard, Testing & Dokumentasi |
+<p align="center">
+  <img src="screenshots/login-screen.png" width="900">
+</p>
 
 ---
 
-# 📄 Lisensi
+# 👨‍💼 Admin
 
-Project ini dibuat untuk memenuhi tugas mata kuliah **Pemrograman Web Berbasis Framework** Program Studi Teknik Informatika Universitas Muhammadiyah Bandung.
+## 📊 Dashboard Admin
+
+<p align="center">
+  <img src="screenshots/admin-dashboard.png" width="900">
+</p>
+
+## 🏠 Denah Kamar
+
+<p align="center">
+  <img src="screenshots/admin-room-layout.png" width="900">
+</p>
+
+## 🚪 Data Kamar
+
+<p align="center">
+  <img src="screenshots/admin-room.png" width="900">
+</p>
+
+## 📜 Rooms History
+
+<p align="center">
+  <img src="screenshots/admin-room-history.png" width="900">
+</p>
+
+## 💡 Kategori Tagihan
+
+<p align="center">
+  <img src="screenshots/admin-bill-category.png" width="900">
+</p>
+
+## 💳 Pembayaran Personal
+
+<p align="center">
+  <img src="screenshots/admin-personal-payment.png" width="900">
+</p>
+
+## 🤝 Pembayaran Patungan
+
+<p align="center">
+  <img src="screenshots/admin-shared-payment.png" width="900">
+</p>
+
+## 🤝 Permintaan Pindah
+
+<p align="center">
+  <img src="screenshots/admin-permintaan-pindah-screen.png" width="900">
+</p>
 
 ---
 
-**KasKos © 2026**
+# 👤 Tenant
+
+## 📊 Dashboard Tenant
+
+<p align="center">
+  <img src="screenshots/tenant-dashboard.png" width="900">
+</p>
+
+## 🏠 Denah Kamar
+
+<p align="center">
+  <img src="screenshots/tenant-room-layout.png" width="900">
+</p>
+
+## 💰 Tagihan Saya
+
+<p align="center">
+  <img src="screenshots/tenant-my-bill.png" width="900">
+</p>
+
+## 🤝 Biaya sewa
+
+<p align="center">
+  <img src="screenshots/tenant-sewa-payment.png" width="900">
+</p>
+
+## 👤 Profil Saya
+
+<p align="center">
+  <img src="screenshots/tenant-profile.png" width="900">
+</p>
+---
+
+# 📌 Progress Tim
+
+## ✅ Checkpoint 1
+
+Pondasi proyek dikerjakan bersama oleh seluruh anggota.
+
+- Setup Laravel 13
+- Laravel Breeze Authentication
+- Setup Role & Permission (Spatie)
+- Perancangan ERD
+- Pembuatan Database
+- Setup Git Repository
+- Konfigurasi Environment
+
+---
+
+## ✅ Checkpoint 2
+
+Setiap anggota menyelesaikan pondasi modul masing-masing.
+
+- Database Migration
+- Model & Relasi
+- CRUD Dasar
+- Routing
+- Blade View
+- Search
+- Pagination (10 data)
+
+---
+
+# 👨‍💻 Pembagian Tugas
+
+---
+
+## 👤 Ahnaf Musyaffa (230102012)
+
+**Branch**
+
+```
+fitur/kamar-ahnaf
+fitur/kamar-user-ahnaf
+```
+
+### Modul
+
+- CRUD Data Kamar
+- Relasi User ↔ Kamar
+- Assign Penghuni
+- Pindah Penghuni
+- Kosongkan Kamar
+- Update Status Kamar Otomatis
+- Integrasi Rooms History
+
+---
+
+## 👤 Daffa Aqila Riyadi (230102031)
+
+**Branch**
+
+```
+fitur/rooms-history-daffa
+fitur/denah-daffa
+fitur/api-kamar-daffa
+```
+
+### Modul
+
+- Observer Rooms History
+- Halaman Rooms History
+- Denah Kamar Interaktif
+- Klaim Kamar
+- REST API Kamar
+- REST API Rooms History
+
+---
+
+## 👤 Fauzi Maulana Akbar (230102049)
+
+**Branch**
+
+```
+fitur/tagihan-fauzi
+fitur/api-tagihan-fauzi
+```
+
+### Modul
+
+- CRUD Kategori Tagihan
+- CRUD Tagihan Patungan
+- Auto Split Tagihan
+- Relasi Tagihan
+- REST API Kategori Tagihan
+
+---
+
+## 👤 Melani Anggraena (230102073)
+
+**Branch**
+
+```
+fitur/pembayaran-patungan-melani
+fitur/payment-pribadi-melani
+```
+
+### Modul
+
+- Splash Screen
+- Welcome Page
+- CRUD Pembayaran Personal (Admin)
+- CRUD Pembayaran Patungan (Admin)
+- CRUD Pembayaran Tenant
+- Upload Bukti Transfer
+- Approval / Rejection Pembayaran
+- Dokumentasi README
+
+---
+
+## 👤 Tia Pebriyanti (230102125)
+
+**Branch**
+
+```
+fitur/dashboard-tia
+fitur/testing-tia
+fitur/readme-tia
+```
+
+### Modul
+
+- Database Architect
+- Seeder
+- Dashboard Admin
+- Dashboard Tenant
+- Statistik
+- Permintaan Pindah
+- Quality Assurance
+- Feature Testing
+- API Testing
+- Dokumentasi
+
+---
+
+# 📄 Informasi Akademis
+
+Project ini disusun sebagai **Tugas Besar Mata Kuliah Pemrograman Web Berbasis Framework** Program Studi **Teknik Informatika** Universitas Muhammadiyah Bandung.
+
+---
+
+<p align="center">
+<b>🏠 KasKos © 2026</b><br>
+Made with ❤️ by Tim KasKos
+</p>
